@@ -74,7 +74,7 @@ namespace SmartMeterWeb.Services
 
         //public async Task<AuthResponseDto> LoginAsync(RegisterRequestDto request)
         //{
-        //    return new AuthResponse
+
         //}
     }
 }
