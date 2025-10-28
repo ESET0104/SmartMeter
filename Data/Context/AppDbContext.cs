@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartMeter.Data.Entities;
-using SmartMeterApi.Data.Entities;
+using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Data.Entities;
 
 namespace SmartMeterWeb.Data.Context

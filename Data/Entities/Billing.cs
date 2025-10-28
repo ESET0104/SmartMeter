@@ -1,7 +1,7 @@
 ﻿using SmartMeter.Data.Entities;
 using System;
 
-namespace SmartMeterApi.Data.Entities
+namespace SmartMeterWeb.Data.Entities
 {
     public class Billing
     {
