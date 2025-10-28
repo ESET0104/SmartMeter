@@ -10,6 +10,12 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Consumer> Consumers { get; set; }
 
-        //public override void OnModelCreating
+        //To update database after making any changes in the classes, run these
+
+        // Add-Migration <Update migration name>
+        // Update-Database
+
+        //in package manager console
+
     }
 }

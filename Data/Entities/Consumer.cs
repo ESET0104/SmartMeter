@@ -4,7 +4,7 @@ namespace SmartMeterWeb.Data.Entities
 {
     public class Consumer
     {
-        public Int64 ConsumerId { get; set; }
+        [Key] public Int64 ConsumerId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }

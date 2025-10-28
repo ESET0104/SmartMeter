@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
-namespace SmartMeterWeb.Models.Auth
+namespace SmartMeterWeb.Models.AuthDto
 {
     public class LoginRequestDto
     {
