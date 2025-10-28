@@ -22,6 +22,12 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<Arrears> Arrears { get; set; }
         public DbSet<TariffDetails> TariffDetails { get; set; }
 
-        //public override void OnModelCreating
+        //To update database after making any changes in the classes, run these
+
+        // Add-Migration <Update migration name>
+        // Update-Database
+
+        //in package manager console
+
     }
 }

@@ -1,9 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
-using SmartMeterWeb.Models.Auth;
-using BCrypt.Net;
-using Microsoft.AspNetCore.Http.HttpResults;
+using SmartMeterWeb.Models.AuthDto;
+using System.IdentityModel.Tokens.Jwt;
+
+//using BCrypt.Net;
+//using Microsoft.AspNetCore.Http.HttpResults;
+//using System.CodeDom.Compiler;
+using System.Security.Claims;
+using System.Text;
+//using System.Security.Claims;
 
 namespace SmartMeterWeb.Services
 {
@@ -72,9 +79,64 @@ namespace SmartMeterWeb.Services
             return new AuthResponseDto { Name = request.DisplayName ?? request.UserName, Role = request.Role };
         }
 
-        //public async Task<AuthResponseDto> LoginAsync(RegisterRequestDto request)
-        //{
+        public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
+        {
+            if(request.Role == "User")
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == request.UsernameOrEmail);
+                if(user == null)
+                {
+                    throw new Exception("Invalid credentials");
+                }
+                else if(!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                {
+                    throw new Exception("Wrong Password");
+                }
 
-        //}
+                var token = GenerateJwtToken(user.UserName, "User");
+                user.LastLoginUtc = DateTime.UtcNow;
+                return new AuthResponseDto { Name= user.UserName, Role = "User", Token = token };
+            }
+            else if (request.Role == "Consumer")
+            {
+                var user = await _context.Consumers.FirstOrDefaultAsync(u => u.Email == request.UsernameOrEmail);
+                if (user == null || BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                {
+                    throw new Exception("Invalid credentials");
+                }
+
+                var token = GenerateJwtToken(user.Email, "Consumer");
+                
+                return new AuthResponseDto { Name = user.Name, Role = "Consumer", Token = token };
+            }
+            else
+            {
+                throw new Exception("Invalid Role");
+            }
+        }
+
+        private string GenerateJwtToken(string username, string role)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, role)
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        
     }
 }

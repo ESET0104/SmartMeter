@@ -1,10 +1,10 @@
-﻿using SmartMeterWeb.Models.Auth;
+﻿using SmartMeterWeb.Models.AuthDto;
 
 namespace SmartMeterWeb.Services
 {
     public interface IAuthService
     {
         Task<AuthResponseDto> LoginAsync(LoginRequestDto Request);
-        //Task<AuthResponseDto> RegisterAsync(RegisterRequestDto Request);
+        Task<AuthResponseDto> RegisterAsync(RegisterRequestDto Request);
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace SmartMeterWeb.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartMeterWeb.Data.Entities
 {
     public class User
     {
-        public Int64 UserId { get; set; }
+        [Key] public Int64 UserId { get; set; }
         public string UserName { get; set; }
         public string PasswordHash { get; set; }
         public string DisplayName { get; set; }
