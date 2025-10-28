@@ -7,5 +7,6 @@ namespace SmartMeterWeb.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+
     }
 }

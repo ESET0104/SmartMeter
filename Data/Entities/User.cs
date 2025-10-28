@@ -10,5 +10,7 @@
         public string Phone { get; set; }
         public DateTime LastLoginUtc { get; set; }
         public bool IsActive { get; set; }
+        
+
     }
 }
