@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
+using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Models.AuthDto;
 using System.IdentityModel.Tokens.Jwt;
 

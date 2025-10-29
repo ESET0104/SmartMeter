@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics.Metrics;
+﻿
+using System.ComponentModel.DataAnnotations;
 
-namespace SmartMeter.Data.Entities
+namespace SmartMeterWeb.Data.Entities
 {
     public class MeterReading
     {
-        public long MeterReadingId { get; set; }
+        [Key] public long MeterReadingId { get; set; }
         public string MeterId { get; set; } = null!;
         public Meter Meter { get; set; } = null!;
         public DateTimeOffset MeterReadingDate { get; set; }

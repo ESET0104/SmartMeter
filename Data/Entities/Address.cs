@@ -1,8 +1,10 @@
-﻿namespace SmartMeterWeb.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartMeterWeb.Data.Entities
 {
     public class Address
     {
-        public long AddressId { get; set; }
+        [Key] public long AddressId { get; set; }
         public long ConsumerId { get; set; }
         public string? HouseNo { get; set; }
         public string? Locality { get; set; }

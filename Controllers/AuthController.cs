@@ -2,9 +2,9 @@
 //using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using SmartMeterWeb.Models.AuthDto;
-using SmartMeterWeb.Services;
 using SmartMeterWeb.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
+using SmartMeterWeb.Interfaces;
 
 
 namespace SmartMeterWeb.Controllers

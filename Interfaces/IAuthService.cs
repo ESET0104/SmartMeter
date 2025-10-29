@@ -1,6 +1,6 @@
 ﻿using SmartMeterWeb.Models.AuthDto;
 
-namespace SmartMeterWeb.Services
+namespace SmartMeterWeb.Interfaces
 {
     public interface IAuthService
     {

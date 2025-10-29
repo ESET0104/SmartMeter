@@ -1,8 +1,10 @@
-﻿namespace SmartMeter.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartMeterWeb.Data.Entities
 {
     public class OrgUnit
     {
-        public int OrgUnitId { get; set; }
+        [Key] public int OrgUnitId { get; set; }
         public string Type { get; set; } = null!; // 'Zone','Substation','Feeder','DTR'
         public string Name { get; set; } = null!;
         public int? ParentId { get; set; }

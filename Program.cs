@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SmartMeterWeb.Data.Context;
+using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Services;
 using System.Text;
 
