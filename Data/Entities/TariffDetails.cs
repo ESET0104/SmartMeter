@@ -1,6 +1,6 @@
 ﻿using SmartMeter.Data.Entities;
 
-namespace SmartMeter.Data.Entities
+namespace SmartMeterWeb.Data.Entities
 {
     public class TariffDetails
     {
