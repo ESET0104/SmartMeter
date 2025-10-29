@@ -9,6 +9,7 @@ using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Services;
 using System.Text;
 
+
 namespace SmartMeterWeb
 {
     public class Program
@@ -75,6 +76,8 @@ namespace SmartMeterWeb
                     }
                 });
             });
+
+            builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
 
             var app = builder.Build();
 
