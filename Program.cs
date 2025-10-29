@@ -21,7 +21,10 @@ namespace SmartMeterWeb
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
-            builder.Services.AddScoped<ReportService>();
+            builder.Services.AddScoped<ITariffService, TariffService>();
+            builder.Services.AddScoped<IMonthlyTariffReportService, MonthlyTariffReportService>();
+            builder.Services.AddScoped<IConsumerTariffService, ConsumerTariffService>();
+
 
             builder.Services.AddScoped<IAuthService, AuthService>();
 
