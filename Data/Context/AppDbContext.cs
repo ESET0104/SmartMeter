@@ -25,7 +25,7 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<Arrears> Arrears { get; set; }
         public DbSet<TariffDetails> TariffDetails { get; set; }
 
-        public DbSet<OrgUnit> OrgUnit { get; set; }
+        public DbSet<OrgUnit> OrgUnits { get; set; }
 
         //To update database after making any changes in the classes, run these
 
