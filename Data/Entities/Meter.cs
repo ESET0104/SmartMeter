@@ -1,10 +1,11 @@
-﻿using System;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMeterWeb.Data.Entities
 {
     public class Meter
     {
-        public string MeterSerialNo { get; set; } = null!;
+        [Key] public string MeterSerialNo { get; set; } = null!;
         public string IpAddress { get; set; } = null!;
         public string ICCID { get; set; } = null!;
         public string IMSI { get; set; } = null!;

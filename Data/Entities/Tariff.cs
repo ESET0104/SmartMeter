@@ -1,12 +1,11 @@
-﻿using System;
-using SmartMeter.Data.Entities;
+﻿
+using System.ComponentModel.DataAnnotations;
 
-
-namespace SmartMeter.Data.Entities
+namespace SmartMeterWeb.Data.Entities
 {
     public class Tariff
     {
-        public int TariffId { get; set; }
+        [Key] public int TariffId { get; set; }
         public string Name { get; set; } = null!;
         public DateOnly EffectiveFrom { get; set; }
         public DateOnly? EffectiveTo { get; set; }

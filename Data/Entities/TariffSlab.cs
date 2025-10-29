@@ -1,8 +1,10 @@
-﻿namespace SmartMeter.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartMeterWeb.Data.Entities
 {
     public class TariffSlab
     {
-        public int TariffSlabId { get; set; }
+        [Key] public int TariffSlabId { get; set; }
         public int TariffId { get; set; }
         public Tariff Tariff { get; set; } = null!;
         public decimal FromKwh { get; set; }

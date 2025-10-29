@@ -1,11 +1,11 @@
-﻿using SmartMeter.Data.Entities;
-using System;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMeterWeb.Data.Entities
 {
     public class Arrears
     {
-        public long ArrearId { get; set; }
+        [Key] public long ArrearId { get; set; }
         public long ConsumerId { get; set; }
         public Consumer Consumer { get; set; } = null!;
         public string ArrearType { get; set; } = null!; // 'Overdue','Penalty','Interest'

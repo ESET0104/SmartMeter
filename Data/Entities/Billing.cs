@@ -1,11 +1,11 @@
-﻿using SmartMeter.Data.Entities;
-using System;
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMeterWeb.Data.Entities
 {
     public class Billing
     {
-        public long BillId { get; set; }
+        [Key] public long BillId { get; set; }
         public long ConsumerId { get; set; }
         public Consumer Consumer { get; set; } = null!;
         public string MeterId { get; set; } = null!; // MeterSerialNo
