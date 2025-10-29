@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029093210_AddPhotoEntity")]
+    partial class AddPhotoEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,8 +183,8 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhotoPath")
-                        .HasColumnType("text");
+                    b.Property<int?>("PhotoId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -198,6 +201,8 @@ namespace SmartMeterWeb.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("ConsumerId");
+
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("Consumers");
                 });
@@ -276,6 +281,31 @@ namespace SmartMeterWeb.Migrations
                     b.HasIndex("MeterId");
 
                     b.ToTable("MeterReadings");
+                });
+
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.PhotoDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Tariff", b =>
@@ -464,6 +494,15 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("Consumer");
+                });
+
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.Consumer", b =>
+                {
+                    b.HasOne("SmartMeterWeb.Data.Entities.PhotoDto", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId");
+
+                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Meter", b =>

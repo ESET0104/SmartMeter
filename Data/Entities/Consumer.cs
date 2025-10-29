@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SmartMeterWeb.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartMeterWeb.Data.Entities
 {
@@ -16,6 +18,7 @@ namespace SmartMeterWeb.Data.Entities
         public DateTime UpdatedAt { get; set; }
         public string UpdatedBy { get; set; }
         public string PasswordHash { get; set; }
+        public string? PhotoPath { get; set; }
 
     }
 }
