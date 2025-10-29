@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
+
 //using SmartMeter.Data.Entities;
 using SmartMeterWeb.Data.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 //using SmartMeterWeb.Data.Entities;
 
 namespace SmartMeterWeb.Data.Context
@@ -22,12 +25,20 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<Arrears> Arrears { get; set; }
         public DbSet<TariffDetails> TariffDetails { get; set; }
 
+        public DbSet<OrgUnit> OrgUnits { get; set; }
+
         //To update database after making any changes in the classes, run these
 
         // Add-Migration <Update migration name>
         // Update-Database
 
         //in package manager console
+
+
+
+        //adddng foreign keys relations between  consumer and tarrif ,
+        //TariffRate and Tariff
+        //TodRule and 
 
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029045516_initialmigration")]
+    partial class initialmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,7 +102,7 @@ namespace SmartMeterWeb.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("BillId"));
 
                     b.Property<decimal>("BaseAmount")
-                        .HasColumnType("numeric(18,4)");
+                        .HasColumnType("numeric");
 
                     b.Property<DateOnly>("BillingPeriodEnd")
                         .HasColumnType("date");
@@ -121,26 +124,23 @@ namespace SmartMeterWeb.Migrations
 
                     b.Property<string>("MeterId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("MeterId");
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset?>("PaidDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("TaxAmount")
-                        .HasColumnType("numeric(18,4)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric(18,4)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("TotalUnitsConsumed")
-                        .HasColumnType("numeric(18,6)");
+                        .HasColumnType("numeric");
 
                     b.HasKey("BillId");
 
@@ -183,9 +183,6 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhotoPath")
-                        .HasColumnType("text");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
@@ -212,43 +209,36 @@ namespace SmartMeterWeb.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<long?>("ConsumerId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Firmware")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ICCID")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("text");
 
                     b.Property<string>("IMSI")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("InstallTsUtc")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("text");
 
                     b.HasKey("MeterSerialNo");
 
@@ -259,35 +249,29 @@ namespace SmartMeterWeb.Migrations
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.MeterReading", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("MeterReadingId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("MeterReadingId"));
 
-                    b.Property<double>("Current")
-                        .HasColumnType("double precision");
+                    b.Property<decimal>("Current")
+                        .HasColumnType("numeric");
 
-                    b.Property<double>("EnergyConsumed")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("KilowattHours")
-                        .HasColumnType("double precision");
+                    b.Property<decimal>("EnergyConsumed")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("MeterId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<double>("PowerFactor")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("ReadingDate")
+                    b.Property<DateTimeOffset>("MeterReadingDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<double>("Voltage")
-                        .HasColumnType("double precision");
+                    b.Property<decimal>("Voltage")
+                        .HasColumnType("numeric");
 
-                    b.HasKey("Id");
+                    b.HasKey("MeterReadingId");
 
                     b.HasIndex("MeterId");
 

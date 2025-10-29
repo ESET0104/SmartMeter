@@ -10,6 +10,7 @@ using SmartMeterWeb.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 
+
 namespace SmartMeterWeb
 {
     public class Program
@@ -22,6 +23,11 @@ namespace SmartMeterWeb
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
+            builder.Services.AddScoped<ITariffService, TariffService>();
+            builder.Services.AddScoped<IMonthlyTariffReportService, MonthlyTariffReportService>();
+            builder.Services.AddScoped<IConsumerTariffService, ConsumerTariffService>();
+
+
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IConsumerService, ConsumerService>();
 
@@ -81,6 +87,8 @@ namespace SmartMeterWeb
                     }
                 });
             });
+
+            builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
 
             var app = builder.Build();
 
