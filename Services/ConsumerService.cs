@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Interfaces;
-using SmartMeterWeb.Models;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
+
 
 namespace SmartMeterWeb.Services
 {
@@ -91,7 +88,7 @@ namespace SmartMeterWeb.Services
                 Directory.CreateDirectory(uploadsFolder);
 
             var extension = Path.GetExtension(file.FileName);
-            var safeName = ConsumerName.Replace(" ", "_"); // remove spaces
+            var safeName = ConsumerName.Replace(" ", "_");
             var uniqueFileName = $"{safeName}{extension}";
 
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);

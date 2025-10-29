@@ -1,6 +1,5 @@
 ﻿using SmartMeterWeb.Models;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartMeterWeb.Data.Entities
 {
