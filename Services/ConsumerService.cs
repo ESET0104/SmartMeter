@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartMeterWeb.Data.Context;
-using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Interfaces;
+using SmartMeterWeb.Models;
 
 
 namespace SmartMeterWeb.Services

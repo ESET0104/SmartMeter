@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartMeterWeb.Data.Entities;
+using SmartMeterWeb.Models;
 
 namespace SmartMeterWeb.Interfaces
 {
