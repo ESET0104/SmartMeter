@@ -205,6 +205,34 @@ namespace SmartMeterWeb.Migrations
                     b.ToTable("Consumers");
                 });
 
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.CustomerCareMessage", b =>
+                {
+                    b.Property<long>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("MessageId"));
+
+                    b.Property<long>("ConsumerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("MessageId");
+
+                    b.ToTable("CustomerCareMessages");
+                });
+
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.LoginLog", b =>
                 {
                     b.Property<int>("Id")
