@@ -11,5 +11,7 @@
         public decimal AvgPerConsumer { get; set; }
         public int OverdueBills { get; set; }
     }
+
+
 }
 
