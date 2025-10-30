@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251030044559_AddLogger")]
+    partial class AddLogger
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,10 +216,7 @@ namespace SmartMeterWeb.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IpAddress")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsSuccess")
+                    b.Property<bool>("IsSuccessfull")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Message")

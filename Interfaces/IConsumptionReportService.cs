@@ -4,7 +4,7 @@ namespace SmartMeterWeb.Interfaces
 {
     public interface IConsumptionReportService
     {
-        Task<HistoricalConsumptionResponseDto> GetHistoricalConsumptionAsync(HistoricalConsumptionRequestDto request);
+        //Task<HistoricalConsumptionResponseDto> GetHistoricalConsumptionAsync(HistoricalConsumptionRequestDto request);
 
     }
 }

@@ -17,8 +17,7 @@ namespace SmartMeterWeb.Controllers
             _ConsumerService = consumerService;
         }
 
-        //[Authorize(Roles ="User")]
-        [AllowAnonymous]
+        [Authorize(Roles ="User")]
         [HttpGet("{Name}")]
         public async Task<ActionResult> GetConsumerByName(string Name)
         {
@@ -26,13 +25,14 @@ namespace SmartMeterWeb.Controllers
             return Ok(response);
         }
 
-        //[Authorize(Roles = "Consumer")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Consumer")]
+        //[AllowAnonymous]
         [HttpPost("Photo")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadConsumerPhotoAsync([FromForm] PhotoDto dto)
         {
             return await _ConsumerService.UploadConsumerPhotoAsync(dto.ConsumerName, dto.File);
         }
+
     }
 }
