@@ -34,8 +34,6 @@ namespace SmartMeterWeb.Data.Context
 
         //in package manager console
 
-
-
         //adddng foreign keys relations between  consumer and tarrif ,
         //TariffRate and Tariff
         //TodRule and 

@@ -25,9 +25,12 @@ namespace SmartMeterWeb
             builder.Services.AddScoped<ITariffService, TariffService>();
             builder.Services.AddScoped<IMonthlyTariffReportService, MonthlyTariffReportService>();
             builder.Services.AddScoped<IConsumerTariffService, ConsumerTariffService>();
+            builder.Services.AddScoped<IUserReportService, UserReportService>();
 
 
             builder.Services.AddScoped<IAuthService, AuthService>();
+
+
 
             builder.Services.AddControllers(options =>
             {

@@ -24,6 +24,7 @@ namespace SmartMeterWeb.Controllers
             return Ok(result);
         }
 
+
     }
 
 }
