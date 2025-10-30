@@ -43,17 +43,17 @@ namespace SmartMeterWeb.Data.Entities
         public decimal TotalAmount { get; set; }
 
         [Required]
-        public DateTimeOffset GeneratedAt { get; set; } = DateTimeOffset.UtcNow;
+        public DateTime GeneratedAt { get; set; }
 
         [Required]
         public DateOnly DueDate { get; set; }
 
-        public DateTimeOffset? PaidDate { get; set; }
+        public DateTime? PaidDate { get; set; }
 
         [Required]
         [MaxLength(20)]
         public string PaymentStatus { get; set; } = "Unpaid"; // Unpaid, Paid, Overdue, Cancelled
 
-        public DateTimeOffset? DisconnectionDate { get; set; }
+        public DateTime? DisconnectionDate { get; set; }
     }
 }

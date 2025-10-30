@@ -1,5 +1,5 @@
 ﻿using SmartMeterWeb.Data.Entities;
-using SmartMeterWeb.Models.AuthDto;
+using SmartMeterWeb.Models.Billing;
 
 namespace SmartMeterWeb.Interfaces
 {

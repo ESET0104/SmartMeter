@@ -1,4 +1,4 @@
-﻿namespace SmartMeterWeb.Data.Entities
+﻿namespace SmartMeterWeb.Models
 {
     public class ConsumerDto
     {
