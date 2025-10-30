@@ -92,6 +92,8 @@ namespace SmartMeterWeb
             });
 
             builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
+            builder.Services.AddScoped<IBillingService, BillingService>();
+
 
             var app = builder.Build();
 

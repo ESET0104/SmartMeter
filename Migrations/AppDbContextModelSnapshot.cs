@@ -110,13 +110,13 @@ namespace SmartMeterWeb.Migrations
                     b.Property<long>("ConsumerId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTimeOffset?>("DisconnectionDate")
+                    b.Property<DateTime?>("DisconnectionDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateOnly>("DueDate")
                         .HasColumnType("date");
 
-                    b.Property<DateTimeOffset>("GeneratedAt")
+                    b.Property<DateTime>("GeneratedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MeterId")
@@ -125,7 +125,7 @@ namespace SmartMeterWeb.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("MeterId");
 
-                    b.Property<DateTimeOffset?>("PaidDate")
+                    b.Property<DateTime?>("PaidDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PaymentStatus")
@@ -292,6 +292,32 @@ namespace SmartMeterWeb.Migrations
                     b.HasIndex("MeterId");
 
                     b.ToTable("MeterReadings");
+                });
+
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.OrgUnit", b =>
+                {
+                    b.Property<int>("OrgUnitId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrgUnitId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("OrgUnitId");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("OrgUnits");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Tariff", b =>
@@ -500,6 +526,15 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("Meter");
+                });
+
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.OrgUnit", b =>
+                {
+                    b.HasOne("SmartMeterWeb.Data.Entities.OrgUnit", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.TariffDetails", b =>

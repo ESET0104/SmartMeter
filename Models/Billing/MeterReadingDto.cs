@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartMeterWeb.Models.AuthDto
+namespace SmartMeterWeb.Models.Billing
 {
     public class MeterReadingDto
     {

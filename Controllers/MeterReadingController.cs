@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartMeterWeb.Interfaces;
-using SmartMeterWeb.Models.AuthDto;
+using SmartMeterWeb.Models.Billing;
 
 namespace SmartMeterWeb.Controllers
 {

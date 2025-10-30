@@ -1,8 +1,8 @@
 ﻿using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Interfaces;
-using SmartMeterWeb.Models.AuthDto;
 using Microsoft.EntityFrameworkCore;
+using SmartMeterWeb.Models.Billing;
 
 namespace SmartMeterWeb.Services
 {
