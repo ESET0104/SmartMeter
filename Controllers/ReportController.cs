@@ -7,7 +7,7 @@ namespace SmartMeterWeb.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]//User
     public class ReportController:ControllerBase
     {
         private readonly IMonthlyTariffReportService _reportService;

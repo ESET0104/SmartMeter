@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SmartMeterWeb.Configs;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Services;
@@ -22,6 +23,9 @@ namespace SmartMeterWeb
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddScoped<IMailService, MailService>();
+
             // Add services to the container.
             builder.Services.AddScoped<ITariffService, TariffService>();
             builder.Services.AddScoped<IMonthlyTariffReportService, MonthlyTariffReportService>();
@@ -32,6 +36,7 @@ namespace SmartMeterWeb
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IConsumerService, ConsumerService>();
 
+            
 
 
             builder.Services.AddControllers(options =>
