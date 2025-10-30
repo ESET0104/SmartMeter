@@ -101,7 +101,7 @@ namespace SmartMeterWeb.Services
             else if (request.Role == "Consumer")
             {
                 var user = await _context.Consumers.FirstOrDefaultAsync(u => u.Email == request.UsernameOrEmail);
-                if (user == null || BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 {
                     throw new Exception("Invalid credentials");
                 }

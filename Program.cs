@@ -8,6 +8,7 @@ using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Services;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 namespace SmartMeterWeb
@@ -29,6 +30,7 @@ namespace SmartMeterWeb
 
 
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IConsumerService, ConsumerService>();
 
 
 
@@ -38,6 +40,10 @@ namespace SmartMeterWeb
                     .RequireAuthenticatedUser()
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
 
             builder.Services.AddAuthentication("Bearer")
@@ -95,6 +101,8 @@ namespace SmartMeterWeb
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 
