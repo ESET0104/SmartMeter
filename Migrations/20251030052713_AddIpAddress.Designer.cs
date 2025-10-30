@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251030052713_AddIpAddress")]
+    partial class AddIpAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,13 +113,13 @@ namespace SmartMeterWeb.Migrations
                     b.Property<long>("ConsumerId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("DisconnectionDate")
+                    b.Property<DateTimeOffset?>("DisconnectionDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateOnly>("DueDate")
                         .HasColumnType("date");
 
-                    b.Property<DateTime>("GeneratedAt")
+                    b.Property<DateTimeOffset>("GeneratedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MeterId")
@@ -125,7 +128,7 @@ namespace SmartMeterWeb.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("MeterId");
 
-                    b.Property<DateTime?>("PaidDate")
+                    b.Property<DateTimeOffset?>("PaidDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PaymentStatus")

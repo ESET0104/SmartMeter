@@ -35,10 +35,12 @@ namespace SmartMeterWeb.Controllers
             return Ok(response);
         }
 
-        //[HttpGet]
-        //public Task<ActionResult<User> GetUsers()
-        //{
-
-        //}
+        [AllowAnonymous]
+        [HttpPut("PassWord")]
+        public async Task<ActionResult> UpdatePassword([FromBody] PasswordUpdateDto request)
+        {
+            var res = await _authService.UpdatePassWord(request);
+            return Ok(res);
+        }
     }
 }

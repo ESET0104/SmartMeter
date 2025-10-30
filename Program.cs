@@ -26,7 +26,11 @@ namespace SmartMeterWeb
             builder.Services.AddScoped<ITariffService, TariffService>();
             builder.Services.AddScoped<IMonthlyTariffReportService, MonthlyTariffReportService>();
             builder.Services.AddScoped<IConsumerTariffService, ConsumerTariffService>();
+
+            builder.Services.AddScoped<ILogService, LogService>();
+
             builder.Services.AddScoped<IUserReportService, UserReportService>();
+
 
 
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -94,6 +98,8 @@ namespace SmartMeterWeb
             builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
             builder.Services.AddScoped<IBillingService, BillingService>();
 
+
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 

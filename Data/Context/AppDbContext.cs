@@ -17,15 +17,14 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<Tariff> Tariffs { get; set; }
         public DbSet<TodRule> TodRules { get; set; }
         public DbSet<TariffSlab> TariffSlabs { get; set; }
-
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Meter> Meters { get; set; }
         public DbSet<MeterReading> MeterReadings { get; set; }
         public DbSet<Billing> Billings { get; set; }
         public DbSet<Arrears> Arrears { get; set; }
         public DbSet<TariffDetails> TariffDetails { get; set; }
-
         public DbSet<OrgUnit> OrgUnits { get; set; }
+        public DbSet<LoginLog> LoginLogs { get; set; }
 
         //To update database after making any changes in the classes, run these
 

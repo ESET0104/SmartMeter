@@ -1,4 +1,5 @@
-﻿using SmartMeterWeb.Models.AuthDto;
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartMeterWeb.Models.AuthDto;
 
 namespace SmartMeterWeb.Interfaces
 {
@@ -6,5 +7,6 @@ namespace SmartMeterWeb.Interfaces
     {
         Task<AuthResponseDto> LoginAsync(LoginRequestDto Request);
         Task<AuthResponseDto> RegisterAsync(RegisterRequestDto Request);
+        Task<ActionResult> UpdatePassWord(PasswordUpdateDto request);
     }
 }
