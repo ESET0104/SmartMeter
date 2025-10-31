@@ -9,15 +9,11 @@ namespace SmartMeterWeb.Data.Entities
         [Key]
         public long BillId { get; set; }
 
-        [Required]
-        public long ConsumerId { get; set; }
-
-        [ForeignKey(nameof(ConsumerId))]
+        [Required][ForeignKey("Consumer")] public long ConsumerId { get; set; }
         public Consumer Consumer { get; set; } = null!;
 
         [Required]
-        [MaxLength(50)]
-        [Column("MeterId")]
+        [ForeignKey("Meter")]
         public string MeterId { get; set; } = null!; // References Meter.MeterSerialNo
 
         [Required]
@@ -28,22 +24,22 @@ namespace SmartMeterWeb.Data.Entities
 
         [Required]
         [Column(TypeName = "numeric(18,6)")]
-        public decimal TotalUnitsConsumed { get; set; }
+        public double TotalUnitsConsumed { get; set; }
 
         [Required]
         [Column(TypeName = "numeric(18,4)")]
-        public decimal BaseAmount { get; set; }
+        public double BaseAmount { get; set; }
 
         [Required]
         [Column(TypeName = "numeric(18,4)")]
-        public decimal TaxAmount { get; set; }
+        public double TaxAmount { get; set; }
 
         [Required]
         [Column(TypeName = "numeric(18,4)")]
-        public decimal TotalAmount { get; set; }
+        public double TotalAmount { get; private set; } 
 
         [Required]
-        public DateTime GeneratedAt { get; set; }
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
         public DateOnly DueDate { get; set; }

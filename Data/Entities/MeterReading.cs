@@ -9,17 +9,12 @@ namespace SmartMeterWeb.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string MeterId { get; set; }
-
-        [ForeignKey(nameof(MeterId))]
+        [Required][ForeignKey("Meter")] public string MeterId { get; set; }
+        
         public Meter Meter { get; set; }
 
         [Required]
-        public DateTime ReadingDate { get; set; }
-
-        [Required]
-        public double KilowattHours { get; set; }
+        public DateTime ReadingDateTime { get; set; }
 
         [Required]
         public double Voltage { get; set; }

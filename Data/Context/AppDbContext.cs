@@ -21,7 +21,7 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<Meter> Meters { get; set; }
         public DbSet<MeterReading> MeterReadings { get; set; }
         public DbSet<Billing> Billings { get; set; }
-        public DbSet<Arrears> Arrears { get; set; }
+        public DbSet<Arrear> Arrears { get; set; }
         public DbSet<TariffDetails> TariffDetails { get; set; }
         public DbSet<OrgUnit> OrgUnits { get; set; }
         public DbSet<LoginLog> LoginLogs { get; set; }
@@ -37,5 +37,63 @@ namespace SmartMeterWeb.Data.Context
         //TariffRate and Tariff
         //TodRule and 
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OrgUnit>()
+                .ToTable(t => t.HasCheckConstraint("CK_Type", "\"Type\" IN ('Zone','Substation','Feeder','DTR')"));
+
+            modelBuilder.Entity<OrgUnit>()
+                .HasIndex(l => l.Type);
+
+            modelBuilder.Entity<Tariff>()
+                .ToTable(t => t.HasCheckConstraint("CK_Tariff_Dates", "\"EffectiveTo\" IS NULL OR \"EffectiveFrom\" < \"EffectiveTo\""));
+
+            modelBuilder.Entity<Tariff>()
+                .ToTable(t => t.HasCheckConstraint("CK_Tariff_BaseRate", "\"BaseRate\" > 0"));
+
+            modelBuilder.Entity<TodRule>()
+                .ToTable(t => t.HasCheckConstraint("CK_TodRule_Time", "\"EndTime\" > \"StartTime\""));
+
+            modelBuilder.Entity<TodRule>()
+                .ToTable(t => t.HasCheckConstraint("CK_TodRule_Rate", "\"RatePerKwh\" > 0"));
+
+            modelBuilder.Entity<TodRule>()
+                .HasIndex(l => l.Name);
+
+            modelBuilder.Entity<TariffSlab>()
+                .ToTable(t => t.HasCheckConstraint("CK_TariffSlab_Range", "\"FromKwh\" >= 0 AND \"ToKwh\" > \"FromKwh\""));
+
+            modelBuilder.Entity<TariffSlab>()
+                .ToTable(t => t.HasCheckConstraint("CK_TariffSlab_Rate", "\"RatePerKwh\" > 0"));
+
+            modelBuilder.Entity<Consumer>()
+                .ToTable(t => t.HasCheckConstraint("CK_Consumer_timestamp", "\"UpdatedAt\" IS NULL OR \"UpdatedAt\" > \"CreatedAt\""));
+
+            modelBuilder.Entity<Consumer>()
+                .HasIndex(l => l.Name);
+
+            modelBuilder.Entity<Meter>()
+                .ToTable(t => t.HasCheckConstraint("CK_Meter_Status", "\"Status\" IN ('Active','Inactive','Decommissioned')"));
+
+            modelBuilder.Entity<Arrear>()
+                .ToTable(t => t.HasCheckConstraint("CK_Arrear_Type", "\"ArrearType\" IN ('Overdue','Penalty','Interest')"));
+
+            modelBuilder.Entity<Arrear>()
+                .ToTable(t => t.HasCheckConstraint("CK_Arrear_Amount", "\"Amount\" >= 0"));
+
+            modelBuilder.Entity<Arrear>()
+                .ToTable(t => t.HasCheckConstraint("CK_Arrear_PaidStatus", "\"PaidStatus\" IN ('Paid','Unpaid','Partially Paid')"));
+
+            modelBuilder.Entity<Billing>()
+                .Property(i => i.TotalAmount)
+                .HasComputedColumnSql("\"BaseAmount\" + \"TaxAmount\"", stored: true);
+
+            modelBuilder.Entity<Billing>()
+                .ToTable(t => t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')"));
+
+
+        }
     }
 }

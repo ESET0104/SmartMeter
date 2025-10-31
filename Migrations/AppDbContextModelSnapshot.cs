@@ -55,7 +55,7 @@ namespace SmartMeterWeb.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("SmartMeterWeb.Data.Entities.Arrears", b =>
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.Arrear", b =>
                 {
                     b.Property<long>("ArrearId")
                         .ValueGeneratedOnAdd()
@@ -63,8 +63,8 @@ namespace SmartMeterWeb.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ArrearId"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("ArrearType")
                         .IsRequired()
@@ -76,7 +76,7 @@ namespace SmartMeterWeb.Migrations
                     b.Property<long>("ConsumerId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PaidStatus")
@@ -87,7 +87,14 @@ namespace SmartMeterWeb.Migrations
 
                     b.HasIndex("ConsumerId");
 
-                    b.ToTable("Arrears");
+                    b.ToTable("Arrears", t =>
+                        {
+                            t.HasCheckConstraint("CK_Arrear_Amount", "\"Amount\" >= 0");
+
+                            t.HasCheckConstraint("CK_Arrear_PaidStatus", "\"PaidStatus\" IN ('Paid','Unpaid','Partially Paid')");
+
+                            t.HasCheckConstraint("CK_Arrear_Type", "\"ArrearType\" IN ('Overdue','Penalty','Interest')");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Billing", b =>
@@ -98,7 +105,7 @@ namespace SmartMeterWeb.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("BillId"));
 
-                    b.Property<decimal>("BaseAmount")
+                    b.Property<double>("BaseAmount")
                         .HasColumnType("numeric(18,4)");
 
                     b.Property<DateOnly>("BillingPeriodEnd")
@@ -121,9 +128,7 @@ namespace SmartMeterWeb.Migrations
 
                     b.Property<string>("MeterId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("MeterId");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("PaidDate")
                         .HasColumnType("timestamp with time zone");
@@ -133,20 +138,25 @@ namespace SmartMeterWeb.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<decimal>("TaxAmount")
+                    b.Property<double>("TaxAmount")
                         .HasColumnType("numeric(18,4)");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric(18,4)");
+                    b.Property<double>("TotalAmount")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("numeric(18,4)")
+                        .HasComputedColumnSql("\"BaseAmount\" + \"TaxAmount\"", true);
 
-                    b.Property<decimal>("TotalUnitsConsumed")
+                    b.Property<double>("TotalUnitsConsumed")
                         .HasColumnType("numeric(18,6)");
 
                     b.HasKey("BillId");
 
                     b.HasIndex("ConsumerId");
 
-                    b.ToTable("Billings");
+                    b.ToTable("Billings", t =>
+                        {
+                            t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Consumer", b =>
@@ -167,6 +177,9 @@ namespace SmartMeterWeb.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -193,16 +206,20 @@ namespace SmartMeterWeb.Migrations
                     b.Property<int>("TariffId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ConsumerId");
 
-                    b.ToTable("Consumers");
+                    b.HasIndex("Name");
+
+                    b.ToTable("Consumers", t =>
+                        {
+                            t.HasCheckConstraint("CK_Consumer_timestamp", "\"UpdatedAt\" IS NULL OR \"UpdatedAt\" > \"CreatedAt\"");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.LoginLog", b =>
@@ -287,7 +304,10 @@ namespace SmartMeterWeb.Migrations
 
                     b.HasIndex("ConsumerId");
 
-                    b.ToTable("Meters");
+                    b.ToTable("Meters", t =>
+                        {
+                            t.HasCheckConstraint("CK_Meter_Status", "\"Status\" IN ('Active','Inactive','Decommissioned')");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.MeterReading", b =>
@@ -304,9 +324,6 @@ namespace SmartMeterWeb.Migrations
                     b.Property<double>("EnergyConsumed")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("KilowattHours")
-                        .HasColumnType("double precision");
-
                     b.Property<string>("MeterId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -314,7 +331,7 @@ namespace SmartMeterWeb.Migrations
                     b.Property<double>("PowerFactor")
                         .HasColumnType("double precision");
 
-                    b.Property<DateTime>("ReadingDate")
+                    b.Property<DateTime>("ReadingDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Voltage")
@@ -350,7 +367,12 @@ namespace SmartMeterWeb.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("OrgUnits");
+                    b.HasIndex("Type");
+
+                    b.ToTable("OrgUnits", t =>
+                        {
+                            t.HasCheckConstraint("CK_Type", "\"Type\" IN ('Zone','Substation','Feeder','DTR')");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Tariff", b =>
@@ -361,8 +383,8 @@ namespace SmartMeterWeb.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TariffId"));
 
-                    b.Property<decimal>("BaseRate")
-                        .HasColumnType("numeric");
+                    b.Property<double>("BaseRate")
+                        .HasColumnType("double precision");
 
                     b.Property<DateOnly>("EffectiveFrom")
                         .HasColumnType("date");
@@ -374,12 +396,17 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("TaxRate")
-                        .HasColumnType("numeric");
+                    b.Property<double>("TaxRate")
+                        .HasColumnType("double precision");
 
                     b.HasKey("TariffId");
 
-                    b.ToTable("Tariffs");
+                    b.ToTable("Tariffs", t =>
+                        {
+                            t.HasCheckConstraint("CK_Tariff_BaseRate", "\"BaseRate\" > 0");
+
+                            t.HasCheckConstraint("CK_Tariff_Dates", "\"EffectiveTo\" IS NULL OR \"EffectiveFrom\" < \"EffectiveTo\"");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.TariffDetails", b =>
@@ -413,26 +440,31 @@ namespace SmartMeterWeb.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TariffSlabId"));
 
-                    b.Property<decimal>("FromKwh")
-                        .HasColumnType("numeric");
+                    b.Property<double>("FromKwh")
+                        .HasColumnType("numeric(18,6)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<decimal>("RatePerKwh")
-                        .HasColumnType("numeric");
+                    b.Property<double>("RatePerKwh")
+                        .HasColumnType("numeric(18,6)");
 
                     b.Property<int>("TariffId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("ToKwh")
-                        .HasColumnType("numeric");
+                    b.Property<double>("ToKwh")
+                        .HasColumnType("numeric(18,6)");
 
                     b.HasKey("TariffSlabId");
 
                     b.HasIndex("TariffId");
 
-                    b.ToTable("TariffSlabs");
+                    b.ToTable("TariffSlabs", t =>
+                        {
+                            t.HasCheckConstraint("CK_TariffSlab_Range", "\"FromKwh\" >= 0 AND \"ToKwh\" > \"FromKwh\"");
+
+                            t.HasCheckConstraint("CK_TariffSlab_Rate", "\"RatePerKwh\" > 0");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.TodRule", b =>
@@ -453,8 +485,8 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("RatePerKwh")
-                        .HasColumnType("numeric");
+                    b.Property<double>("RatePerKwh")
+                        .HasColumnType("double precision");
 
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time without time zone");
@@ -464,9 +496,16 @@ namespace SmartMeterWeb.Migrations
 
                     b.HasKey("TodRuleId");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("TariffId");
 
-                    b.ToTable("TodRules");
+                    b.ToTable("TodRules", t =>
+                        {
+                            t.HasCheckConstraint("CK_TodRule_Rate", "\"RatePerKwh\" > 0");
+
+                            t.HasCheckConstraint("CK_TodRule_Time", "\"EndTime\" > \"StartTime\"");
+                        });
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.User", b =>
@@ -482,13 +521,12 @@ namespace SmartMeterWeb.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastLoginUtc")
+                    b.Property<DateTime?>("LastLoginUtc")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PasswordHash")
@@ -496,7 +534,6 @@ namespace SmartMeterWeb.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UserName")
@@ -504,6 +541,9 @@ namespace SmartMeterWeb.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -519,7 +559,7 @@ namespace SmartMeterWeb.Migrations
                     b.Navigation("Consumer");
                 });
 
-            modelBuilder.Entity("SmartMeterWeb.Data.Entities.Arrears", b =>
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.Arrear", b =>
                 {
                     b.HasOne("SmartMeterWeb.Data.Entities.Consumer", "Consumer")
                         .WithMany()
