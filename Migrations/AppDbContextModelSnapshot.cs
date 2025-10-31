@@ -22,6 +22,8 @@ namespace SmartMeterWeb.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.HasSequence<int>("MeterSeq");
+
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Address", b =>
                 {
                     b.Property<long>("AddressId")
@@ -290,7 +292,9 @@ namespace SmartMeterWeb.Migrations
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Meter", b =>
                 {
                     b.Property<string>("MeterSerialNo")
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValueSql("'SM' || LPAD(nextval('\"MeterSeq\"')::text, 5, '0')");
 
                     b.Property<string>("Category")
                         .IsRequired()
