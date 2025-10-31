@@ -11,7 +11,9 @@ namespace SmartMeterWeb.Data.Entities
         public string Phone { get; set; }
         public string Email { get; set; }
         [Required][ForeignKey("OrgUnit")] public int OrgUnitId { get; set; }
+        public OrgUnit OrgUnit { get; set; } = null!;
         [Required][ForeignKey("Tariff")] public int TariffId { get; set; }
+        public Tariff Tariff { get; set; } = null!;
         [Required] public string Status { get; set; } = "Active";
         [Required] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         [Required] public string CreatedBy { get; set; } = "System";

@@ -216,6 +216,10 @@ namespace SmartMeterWeb.Migrations
 
                     b.HasIndex("Name");
 
+                    b.HasIndex("OrgUnitId");
+
+                    b.HasIndex("TariffId");
+
                     b.ToTable("Consumers", t =>
                         {
                             t.HasCheckConstraint("CK_Consumer_timestamp", "\"UpdatedAt\" IS NULL OR \"UpdatedAt\" > \"CreatedAt\"");
@@ -607,6 +611,25 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("Consumer");
+                });
+
+            modelBuilder.Entity("SmartMeterWeb.Data.Entities.Consumer", b =>
+                {
+                    b.HasOne("SmartMeterWeb.Data.Entities.OrgUnit", "OrgUnit")
+                        .WithMany()
+                        .HasForeignKey("OrgUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartMeterWeb.Data.Entities.Tariff", "Tariff")
+                        .WithMany()
+                        .HasForeignKey("TariffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrgUnit");
+
+                    b.Navigation("Tariff");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Meter", b =>
