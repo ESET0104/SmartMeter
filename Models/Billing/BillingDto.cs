@@ -15,10 +15,10 @@
             public long BillId { get; set; }
             public long ConsumerId { get; set; }
             public string MeterId { get; set; } = null!;
-            public decimal TotalUnitsConsumed { get; set; }
-            public decimal BaseAmount { get; set; }
-            public decimal TaxAmount { get; set; }
-            public decimal TotalAmount { get; set; }
+            public double TotalUnitsConsumed { get; set; }
+            public double BaseAmount { get; set; }
+            public double TaxAmount { get; set; }
+            public double TotalAmount { get; set; }
             public string BillingMonth { get; set; } = null!;
             public string PaymentStatus { get; set; } = "Unpaid";
         }

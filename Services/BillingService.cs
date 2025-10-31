@@ -28,16 +28,14 @@ namespace SmartMeterWeb.Services
 
             var readings = await _context.MeterReadings
                 .Where(r => r.MeterId == meter.MeterSerialNo &&
-                            r.ReadingDate >= startDate &&
-                            r.ReadingDate <= endDate)
+                            r.ReadingDateTime >= startDate &&
+                            r.ReadingDateTime <= endDate)
                 .ToListAsync();
 
             if (!readings.Any()) throw new Exception("No readings found");
 
             var tariff = await _context.Tariffs
-                .Where(t => t.EffectiveFrom <= DateOnly.FromDateTime(startDate) &&
-                            (t.EffectiveTo == null || t.EffectiveTo >= DateOnly.FromDateTime(endDate)))
-                .OrderByDescending(t => t.EffectiveFrom)
+                .Where(t => t.TariffId == consumer.TariffId)
                 .FirstOrDefaultAsync();
 
             if (tariff == null) throw new Exception("No applicable tariff found");
@@ -51,42 +49,42 @@ namespace SmartMeterWeb.Services
                 .OrderBy(s => s.FromKwh)
                 .ToListAsync();
 
-            decimal totalAmount = 0;
+            double baseAmount = 0;
+            double TotalEnergy = 0;
 
             foreach (var reading in readings)
             {
 
-                var readingTime = DateTime.SpecifyKind(reading.ReadingDate, DateTimeKind.Utc);
+                var readingTime = DateTime.SpecifyKind(reading.ReadingDateTime, DateTimeKind.Utc);
 
-                decimal kwh = (decimal)reading.EnergyConsumed;
+                
+                double kwh = reading.EnergyConsumed;
+                TotalEnergy += kwh;
 
                 // TOD check
                 var tod = todRules.FirstOrDefault(t => readingTime.TimeOfDay >= t.StartTime.ToTimeSpan() &&
                                                        readingTime.TimeOfDay < t.EndTime.ToTimeSpan());
 
-                if (tod != null)
-                {
-                    totalAmount += Math.Round(kwh * tod.RatePerKwh, 2);
-                }
-                else
-                {
-                    // Slab calculation
-                    decimal remainingKwh = kwh;
-                    foreach (var slab in slabs)
-                    {
-                        if (remainingKwh <= 0) break;
+               
+                
+                    baseAmount += Math.Round(kwh * tod.RatePerKwh, 2);
+                
+            }
 
-                        decimal slabKwh = Math.Min(remainingKwh, slab.ToKwh - slab.FromKwh);
-                        totalAmount += Math.Round(slabKwh * slab.RatePerKwh, 2);
-                        remainingKwh -= slabKwh;
-                    }
-                }
+            // Slab calculation
+            double remainingKwh = TotalEnergy;
+            foreach (var slab in slabs)
+            {
+                if (remainingKwh <= 0) break;
+
+                double slabKwh = Math.Min(remainingKwh, slab.ToKwh - slab.FromKwh);
+                baseAmount += Math.Round(slabKwh * slab.RatePerKwh, 2);
+                remainingKwh -= slabKwh;
             }
 
             // Add BaseRate and tax
-            totalAmount += tariff.BaseRate;
-            decimal taxAmount = Math.Round(totalAmount * tariff.TaxRate / 100, 2);
-            totalAmount += taxAmount;
+            baseAmount += tariff.BaseRate;
+            double taxAmount = Math.Round(baseAmount * tariff.TaxRate / 100, 2);
 
             var bill = new Billing
             {
@@ -94,11 +92,11 @@ namespace SmartMeterWeb.Services
                 MeterId = dto.MeterId,
                 BillingPeriodStart = DateOnly.FromDateTime(startDate),
                 BillingPeriodEnd = DateOnly.FromDateTime(endDate),
-                TotalUnitsConsumed = (decimal)readings.Sum(r => r.EnergyConsumed),
-                BaseAmount = totalAmount - taxAmount,
+                TotalUnitsConsumed = readings.Sum(r => r.EnergyConsumed),
+                BaseAmount = baseAmount,
                 TaxAmount = taxAmount,
-                TotalAmount = totalAmount,
-                GeneratedAt = DateTime.UtcNow, // ✅ UTC
+                //TotalAmount = totalAmount,
+                //GeneratedAt = DateTime.UtcNow, // ✅ UTC
                 DueDate = DateOnly.FromDateTime(endDate.AddDays(10))
             };
 

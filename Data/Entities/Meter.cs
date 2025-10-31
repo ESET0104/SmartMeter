@@ -39,7 +39,7 @@ namespace SmartMeterWeb.Data.Entities
         [MaxLength(20)]
         public string Status { get; set; } = "Active";
 
-        [ForeignKey(nameof(Consumer))]
+        [ForeignKey("Consumer")]
         public long? ConsumerId { get; set; }
 
         public Consumer? Consumer { get; set; }

@@ -4,11 +4,11 @@
     {
         public string TariffName { get; set; } = string.Empty;
         public int TotalConsumers { get; set; }
-        public decimal TotalUnits { get; set; }
-        public decimal BaseRevenue { get; set; }
-        public decimal TaxCollected { get; set; }
-        public decimal TotalRevenue { get; set; }
-        public decimal AvgPerConsumer { get; set; }
+        public double TotalUnits { get; set; }
+        public double BaseRevenue { get; set; }
+        public double TaxCollected { get; set; }
+        public double TotalRevenue { get; set; }
+        public double AvgPerConsumer { get; set; }
         public int OverdueBills { get; set; }
     }
 

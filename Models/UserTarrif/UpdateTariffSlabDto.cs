@@ -2,8 +2,8 @@
 {
     public class UpdateTariffSlabDto
     {
-        public decimal FromKwh { get; set; }
-        public decimal ToKwh { get; set; }
-        public decimal RatePerKwh { get; set; }
+        public double FromKwh { get; set; }
+        public double ToKwh { get; set; }
+        public double RatePerKwh { get; set; }
     }
 }

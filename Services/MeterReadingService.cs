@@ -30,7 +30,7 @@ namespace SmartMeterWeb.Services
                 Voltage = dto.Voltage,
                 Current = dto.Current,
                 PowerFactor = dto.PowerFactor,
-                ReadingDate = dto.ReadingDate
+                ReadingDateTime = dto.ReadingDate
             };
 
             _context.MeterReadings.Add(reading);
@@ -43,13 +43,13 @@ namespace SmartMeterWeb.Services
         {
             return await _context.MeterReadings
                 .Where(r => r.MeterId == meterId)
-                .OrderByDescending(r => r.ReadingDate)
+                .OrderByDescending(r => r.ReadingDateTime)
                 .ToListAsync();
         }
 
         private double CalculateEnergyConsumed(double voltage, double current, double powerFactor, double hours = 1)
         {
-            double energy = (voltage * current * powerFactor * hours) / 1000.0;
+            double energy = (voltage * current * powerFactor * hours) / 1000;
             return Math.Round(energy, 6);
         }
     }

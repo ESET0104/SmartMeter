@@ -1,17 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMeterWeb.Data.Entities
 {
+    [Index(nameof(UserName), IsUnique = true)]
     public class User
     {
-        [Key] public Int64 UserId { get; set; }
-        public string UserName { get; set; }
-        public string PasswordHash { get; set; }
-        public string DisplayName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public DateTime LastLoginUtc { get; set; }
-        public bool IsActive { get; set; }
+        [Key] public long UserId { get; set; }
+        [Required] public string UserName { get; set; }
+        [Required] public string PasswordHash { get; set; }
+        [Required] public string DisplayName { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public DateTime? LastLoginUtc { get; set; }
+        [Required] public bool IsActive { get; set; } = true;
         
 
     }

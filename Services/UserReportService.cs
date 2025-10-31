@@ -32,13 +32,13 @@ namespace SmartMeterWeb.Services
                             join meter in _context.Meters on mr.MeterId equals meter.MeterSerialNo
                             join consumer in _context.Consumers on meter.ConsumerId equals consumer.ConsumerId
                             join orgUnit in _context.OrgUnits on consumer.OrgUnitId equals orgUnit.OrgUnitId
-                            where mr.ReadingDate >= startDate &&
-                                  mr.ReadingDate <= endDate &&
+                            where mr.ReadingDateTime >= startDate &&
+                                  mr.ReadingDateTime <= endDate &&
                                   consumer.Status == "Active" &&
                                   meter.Status == "Active"
                             select new
                             {
-                                mr.ReadingDate,
+                                mr.ReadingDateTime,
                                 mr.EnergyConsumed,
                                 orgUnit.OrgUnitId,
                                 orgUnit.Name,
@@ -61,11 +61,11 @@ namespace SmartMeterWeb.Services
                     Date = request.Date,
                     OrgUnitName = g.Key.Name,
                     OrgUnitType = g.Key.Type,
-                    TotalEnergyConsumed = g.Sum(x => (decimal)x.EnergyConsumed),
+                    TotalEnergyConsumed = g.Sum(x => (double)x.EnergyConsumed),
                     ConsumerCount = g.Select(x => x.ConsumerId).Distinct().Count(),
-                    AverageConsumption = g.Average(x => (decimal)x.EnergyConsumed),
-                    PeakConsumption = g.Max(x => (decimal)x.EnergyConsumed),
-                    LowConsumption = g.Min(x => (decimal)x.EnergyConsumed)
+                    AverageConsumption = g.Average(x => (double)x.EnergyConsumed),
+                    PeakConsumption = g.Max(x => (double)x.EnergyConsumed),
+                    LowConsumption = g.Min(x => (double)x.EnergyConsumed)
                 })
                 .OrderBy(x => x.OrgUnitName)
                 .ToListAsync();
