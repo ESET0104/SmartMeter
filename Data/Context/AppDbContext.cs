@@ -25,6 +25,9 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<TariffDetails> TariffDetails { get; set; }
         public DbSet<OrgUnit> OrgUnits { get; set; }
         public DbSet<LoginLog> LoginLogs { get; set; }
+        public DbSet<CustomerCareMessage> CustomerCareMessages { get; set; }
+
+        
 
         //To update database after making any changes in the classes, run these
 
@@ -33,9 +36,6 @@ namespace SmartMeterWeb.Data.Context
 
         //in package manager console
 
-        //adddng foreign keys relations between  consumer and tarrif ,
-        //TariffRate and Tariff
-        //TodRule and 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
