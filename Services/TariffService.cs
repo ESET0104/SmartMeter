@@ -24,7 +24,7 @@ namespace SmartMeterWeb.Services
                 return false;
 
             tariff.Name = dto.Name;
-            tariff.BaseRate = dto.BaseRate;
+            tariff.BaseRate = dto.BaseRate;                                                                                  
             tariff.TaxRate = dto.TaxRate;
             tariff.EffectiveFrom = dto.EffectiveFrom;
             tariff.EffectiveTo = dto.EffectiveTo;

@@ -21,6 +21,7 @@ namespace SmartMeterWeb.Services
                                         where c.ConsumerId == consumerId
                                         select new { c.TariffId }).FirstOrDefaultAsync();
 
+
             if (consumerTariff == null)
                 return null;
 
