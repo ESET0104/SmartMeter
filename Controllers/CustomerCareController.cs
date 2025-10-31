@@ -9,7 +9,7 @@ namespace SmartMeterWeb.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+   // [Authorize]
     public class CustomerCareController: ControllerBase
     {
         private readonly AppDbContext _context;
