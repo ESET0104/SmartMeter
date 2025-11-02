@@ -70,9 +70,7 @@ namespace SmartMeterWeb.Services
                     Email = request.Email,
                     Phone = request.Phone,
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
                     CreatedBy = "System",
-                    UpdatedBy = "System",
                     Status = "Active",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
                 };

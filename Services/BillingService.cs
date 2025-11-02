@@ -64,11 +64,10 @@ namespace SmartMeterWeb.Services
                 // TOD check
                 var tod = todRules.FirstOrDefault(t => readingTime.TimeOfDay >= t.StartTime.ToTimeSpan() &&
                                                        readingTime.TimeOfDay < t.EndTime.ToTimeSpan());
-
-               
-                
+                if (tod != null)
+                {
                     baseAmount += Math.Round(kwh * tod.RatePerKwh, 2);
-                
+                }               
             }
 
             // Slab calculation

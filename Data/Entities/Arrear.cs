@@ -13,6 +13,6 @@ namespace SmartMeterWeb.Data.Entities
         [Required] public double Amount { get; set; }
         [Required] public string PaidStatus { get; set; } = null!; // 'Paid','Unpaid','Partially Paid'
         [ForeignKey("Billing")] public long? BillId { get; set; }
-        [Required] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required] public DateTime CreatedAt { get; set; }
     }
 }
