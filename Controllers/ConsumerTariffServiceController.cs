@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Services;
 
@@ -16,7 +17,8 @@ namespace SmartMeterWeb.Controllers
             _consumerTariffService = consumerTariffService;
         }
 
-       
+
+        [AllowAnonymous]
         [HttpGet("consumer/{consumerId}")]
         public async Task<IActionResult> GetConsumerTariffDetails(long consumerId)
         {

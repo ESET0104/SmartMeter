@@ -51,8 +51,11 @@ namespace SmartMeterWeb.Services
                     Email = request.Email,
                     Phone = request.Phone,
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                    
                     IsActive = true
                 };
+
+
 
                 _context.Users.Add(user);
                 
@@ -69,6 +72,8 @@ namespace SmartMeterWeb.Services
                     Name = request.UserName,
                     Email = request.Email,
                     Phone = request.Phone,
+                    OrgUnitId = request.OrgUnitId,
+                    TariffId = request.TariffId,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
                     CreatedBy = "System",

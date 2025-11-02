@@ -7,7 +7,7 @@ namespace SmartMeterWeb.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]//User
+   // [Authorize]//User
     public class ReportController:ControllerBase
     {
         private readonly IMonthlyTariffReportService _reportService;
@@ -16,7 +16,7 @@ namespace SmartMeterWeb.Controllers
         {
             _reportService = reportService;
         }
-
+        [AllowAnonymous]
         [HttpGet("monthly-tariff")]
         public async Task<IActionResult> GetMonthlyTariffReport([FromQuery] int year, [FromQuery] int month)
         {

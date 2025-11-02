@@ -60,5 +60,9 @@ temp chnage
 appsettings.Development.json
 note.md
 
+AppDbContextModelSnapshot.cs
+
 Migrations/
+
+
 
