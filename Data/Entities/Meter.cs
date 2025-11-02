@@ -7,6 +7,7 @@ namespace SmartMeterWeb.Data.Entities
     public class Meter
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string MeterSerialNo { get; set; } = null!;
 
         [Required]

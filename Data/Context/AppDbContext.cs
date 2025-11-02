@@ -42,6 +42,16 @@ namespace SmartMeterWeb.Data.Context
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.HasSequence<int>("MeterSeq")
+                .StartsAt(1)
+                .IncrementsBy(1);
+
+            modelBuilder.Entity<Meter>(entity =>
+            {
+                entity.Property(m => m.MeterSerialNo)
+                    .HasDefaultValueSql("'SM' || LPAD(nextval('\"MeterSeq\"')::text, 5, '0')");
+            });
+
             modelBuilder.Entity<OrgUnit>()
                 .ToTable(t => t.HasCheckConstraint("CK_Type", "\"Type\" IN ('Zone','Substation','Feeder','DTR')"));
 
