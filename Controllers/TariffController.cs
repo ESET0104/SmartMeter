@@ -19,7 +19,7 @@ namespace SmartMeterWeb.Controllers
         }
 
 
-
+        [AllowAnonymous]
         [HttpPut("{tariffId}")]
         public async Task<IActionResult> UpdateTariff(int tariffId, [FromBody] UpdateTariffDto dto)
         {
@@ -29,7 +29,7 @@ namespace SmartMeterWeb.Controllers
             return Ok(new { Message = "Tariff updated successfully" });
         }
 
-
+        [AllowAnonymous]
         [HttpPut("todrule/{todRuleId}")]
         public async Task<IActionResult> UpdateTodRule(int todRuleId, [FromBody] UpdateTodRuleDto dto)
         {
@@ -39,6 +39,7 @@ namespace SmartMeterWeb.Controllers
             return Ok(new { Message = "TOD Rule updated successfully" });
         }
 
+        [AllowAnonymous]
         [HttpPut("slab/{tariffSlabId}")]
         public async Task<IActionResult> UpdateTariffSlab(int tariffSlabId, [FromBody] UpdateTariffSlabDto dto)
         {

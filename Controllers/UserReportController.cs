@@ -7,7 +7,7 @@ namespace SmartMeterWeb.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]// for User
+    //[Authorize]// for User
     public class UserReportController :ControllerBase
     {
         private readonly IUserReportService _userReportService;
@@ -17,6 +17,7 @@ namespace SmartMeterWeb.Controllers
             _userReportService = userReportService;
         }
 
+        [AllowAnonymous]
         [HttpGet("daily-consumption")]
         public async Task<ActionResult<List<HistoricalConsumptionDto>>> GetDailyConsumption(
             [FromQuery] DateTime date, [FromQuery] int? orgUnitId = null)

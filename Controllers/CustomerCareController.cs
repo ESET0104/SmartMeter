@@ -18,7 +18,7 @@ namespace SmartMeterWeb.Controllers
         {
             _context = context;
         }
-
+        [AllowAnonymous]
         [HttpPost("send")]
        
         public async Task AddMessageAsync(CustomerCareMessage message)
@@ -26,7 +26,7 @@ namespace SmartMeterWeb.Controllers
             _context.CustomerCareMessages.Add(message);
             await _context.SaveChangesAsync();
         }
-
+        [AllowAnonymous]
         [HttpGet("all")]
         public async Task<List<CustomerCareMessage>> GetAllMessagesAsync()
         {
