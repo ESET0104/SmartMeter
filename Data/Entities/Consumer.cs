@@ -15,7 +15,7 @@ namespace SmartMeterWeb.Data.Entities
         [Required][ForeignKey("Tariff")] public int TariffId { get; set; }
         public Tariff Tariff { get; set; } = null!;
         [Required] public string Status { get; set; } = "Active";
-        [Required] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required] public DateTime CreatedAt { get; set; }
         [Required] public string CreatedBy { get; set; } = "System";
         public DateTime? UpdatedAt { get; set; } 
         public string? UpdatedBy { get; set; } 

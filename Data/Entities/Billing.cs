@@ -39,7 +39,7 @@ namespace SmartMeterWeb.Data.Entities
         public double TotalAmount { get; private set; } 
 
         [Required]
-        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+        public DateTime GeneratedAt { get; set; } 
 
         [Required]
         public DateOnly DueDate { get; set; }

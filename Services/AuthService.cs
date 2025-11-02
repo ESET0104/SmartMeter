@@ -75,9 +75,7 @@ namespace SmartMeterWeb.Services
                     OrgUnitId = request.OrgUnitId,
                     TariffId = request.TariffId,
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
                     CreatedBy = "System",
-                    UpdatedBy = "System",
                     Status = "Active",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
                 };
