@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SmartMeterWeb.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreatedev : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -488,6 +488,18 @@ namespace SmartMeterWeb.Migrations
                     { 3L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "System", "vikram.s@example.com", false, "Vikram Singh", 6, "$2a$11$pXHOt/8COqUisMbyPjx7Euy2y3myYS9AukeD6jNo91NtYXmKy.k4W", "9876543213", null, "Active", 1, null, null },
                     { 4L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "System", "anjali.d@example.com", false, "Anjali Devi", 6, "$2a$11$pXHOt/8COqUisMbyPjx7Euy2y3myYS9AukeD6jNo91NtYXmKy.k4W", "9876543214", null, "Active", 5, null, null },
                     { 5L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "System", "contact@guptaindustries.com", false, "Gupta Industries", 5, "$2a$11$pXHOt/8COqUisMbyPjx7Euy2y3myYS9AukeD6jNo91NtYXmKy.k4W", "9876543215", null, "Active", 3, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Billings",
+                columns: new[] { "BillId", "BaseAmount", "BillingPeriodEnd", "BillingPeriodStart", "ConsumerId", "DisconnectionDate", "DueDate", "GeneratedAt", "MeterId", "PaidDate", "PaymentStatus", "TaxAmount", "TotalUnitsConsumed" },
+                values: new object[,]
+                {
+                    { 1L, 901.79999999999995, new DateOnly(2025, 9, 1), new DateOnly(2025, 8, 1), 1L, null, new DateOnly(2025, 9, 15), new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc), "GN24A00187", new DateTime(2025, 9, 10, 10, 30, 0, 0, DateTimeKind.Utc), "Paid", 90.180000000000007, 175.30000000000001 },
+                    { 2L, 7296.1199999999999, new DateOnly(2025, 9, 1), new DateOnly(2025, 8, 1), 2L, null, new DateOnly(2025, 9, 15), new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc), "LT24C00255", new DateTime(2025, 9, 8, 14, 0, 0, 0, DateTimeKind.Utc), "Paid", 875.52999999999997, 910.5 },
+                    { 3L, 1264.2, new DateOnly(2025, 9, 1), new DateOnly(2025, 8, 1), 3L, null, new DateOnly(2025, 9, 15), new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc), "GN24A00193", new DateTime(2025, 9, 12, 11, 45, 0, 0, DateTimeKind.Utc), "Paid", 126.42, 225.19999999999999 },
+                    { 4L, 966.75, new DateOnly(2025, 9, 1), new DateOnly(2025, 8, 1), 4L, null, new DateOnly(2025, 9, 15), new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc), "HP24E00301", new DateTime(2025, 9, 7, 16, 20, 0, 0, DateTimeKind.Utc), "Paid", 77.340000000000003, 154.5 },
+                    { 5L, 121655.60000000001, new DateOnly(2025, 9, 1), new DateOnly(2025, 8, 1), 5L, null, new DateOnly(2025, 9, 15), new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc), "LT24I00419", new DateTime(2025, 9, 5, 9, 15, 0, 0, DateTimeKind.Utc), "Paid", 18248.34, 12221.299999999999 }
                 });
 
             migrationBuilder.InsertData(
