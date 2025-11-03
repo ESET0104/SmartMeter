@@ -112,6 +112,7 @@ namespace SmartMeterWeb.Services
                 await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "User", true, "Login successful", ipAddress);
                 var token = GenerateJwtToken(user.UserName, "User");
                 user.LastLoginUtc = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
                 return new AuthResponseDto { Name= user.UserName, Role = "User", Token = token };
             }
             else if (request.Role == "Consumer")

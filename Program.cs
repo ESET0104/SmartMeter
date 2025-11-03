@@ -75,8 +75,7 @@ namespace SmartMeterWeb
                 };
             });
 
-            Console.WriteLine("P");
-            Console.WriteLine(BCrypt.Net.BCrypt.HashPassword("consumer123"));
+            
 
             builder.Services.AddAuthorization();
             
