@@ -9,14 +9,22 @@ namespace SmartMeterWeb.Services
 {
     public class CustomerCareService : ICustomerCareService
     {
+        //private readonly AppDbContext _context;
+
+        // private readonly IMailService _mailService;
+
+        //public CustomerCareService(AppDbContext context)
+        //{
+        //    _context = context;
+
+        //}
         private readonly AppDbContext _context;
+        private readonly IMailService _mailService;
 
-       // private readonly IMailService _mailService;
-
-        public CustomerCareService(AppDbContext context)
+        public CustomerCareService(AppDbContext context, IMailService mailService)
         {
             _context = context;
-            
+            _mailService = mailService;
         }
 
         public async Task AddMessageAsync(CustomerCareDto dto)
@@ -33,10 +41,14 @@ namespace SmartMeterWeb.Services
             //    );
             _context.CustomerCareMessages.Add(message);
             await _context.SaveChangesAsync();
-            
+            await _mailService.SendEmailAsync(
+        "msurendra.nit@gmail.com",
+        "Customer Issue Received",
+        "<p>Your issue has been received. We will resolve it within 3 days.</p>"
+    );
 
-            
-                
+
+
         }
 
         public async Task<List<CustomerCareMessage>> GetAllMessagesAsync()
@@ -44,7 +56,9 @@ namespace SmartMeterWeb.Services
             return await _context.CustomerCareMessages
                 .OrderByDescending(m => m.MessageId)
                 .ToListAsync();
+
         }
+
 
 
     }

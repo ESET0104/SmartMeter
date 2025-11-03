@@ -138,5 +138,24 @@ namespace SmartMeterWeb.Services
             return bills;
         }
 
+        public async Task<BillingResponseDto?> GetBillByIdAsync(int billId)
+        {
+            var bill = await _context.Billings.FirstOrDefaultAsync(b => b.BillId == billId);
+            if (bill == null) return null;
+
+            return new BillingResponseDto
+            {
+                BillId = bill.BillId,
+                ConsumerId = bill.ConsumerId,
+                MeterId = bill.MeterId,
+                TotalUnitsConsumed = bill.TotalUnitsConsumed,
+                BaseAmount = bill.BaseAmount,
+                TaxAmount = bill.TaxAmount,
+                TotalAmount = bill.TotalAmount,
+                BillingMonth = $"{bill.BillingPeriodStart:MM-yyyy}",
+                PaymentStatus = bill.PaymentStatus
+            };
+        }
+
     }
 }

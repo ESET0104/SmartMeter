@@ -24,7 +24,10 @@ namespace SmartMeterWeb.Services
             var result = await (from b in _context.Billings
                                 join c in _context.Consumers on b.ConsumerId equals c.ConsumerId
                                 join t in _context.Tariffs on c.TariffId equals t.TariffId
-                                where b.BillingPeriodStart >= fromDate && b.BillingPeriodEnd <= toDate
+                                where b.BillingPeriodStart >= fromDate
+                                         && b.BillingPeriodStart < toDate.AddDays(1)
+
+
                                 group new { b, c, t } by t.Name into g
                                 select new MonthlyTariffReportDto
                                 {
