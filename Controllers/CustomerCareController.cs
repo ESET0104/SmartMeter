@@ -13,11 +13,14 @@ namespace SmartMeterWeb.Controllers
     public class CustomerCareController: ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IMailService _mailService;
 
-        public CustomerCareController(AppDbContext context)
+        public CustomerCareController(AppDbContext context, IMailService mailService)
         {
             _context = context;
+            _mailService = mailService;
         }
+
         [AllowAnonymous]
         [HttpPost("send")]
        
@@ -25,6 +28,12 @@ namespace SmartMeterWeb.Controllers
         {
             _context.CustomerCareMessages.Add(message);
             await _context.SaveChangesAsync();
+            await _mailService.SendEmailAsync(
+                "msurendranitw@gmail.com",
+                "Customer Care",
+                "<p>Your issue has been received. We will resolve it within 3 days.</p>"
+            );
+
         }
         [AllowAnonymous]
         [HttpGet("all")]
@@ -33,7 +42,20 @@ namespace SmartMeterWeb.Controllers
             return await _context.CustomerCareMessages
                 .OrderByDescending(m => m.MessageId)
                 .ToListAsync();
+
         }
+        //[AllowAnonymous]
+        //[HttpGet("test-email")]
+        //public async Task<IActionResult> TestEmail()
+        //{
+        //    await _mailService.SendEmailAsync(
+        //        "msurendranitw@gmail.com",
+        //        "Customer Issue Received",
+        //        "<p>Your issue has been received. We will resolve it within 3 days.</p>"
+        //    );
+
+        //    return Ok("Email sent!");
+        //}
 
     }
 }

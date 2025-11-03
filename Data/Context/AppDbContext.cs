@@ -104,6 +104,91 @@ namespace SmartMeterWeb.Data.Context
             modelBuilder.Entity<Billing>()
                 .ToTable(t => t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')"));
 
+            modelBuilder.Entity<Billing>().HasData(
+    new Billing
+    {
+        BillId = 1,
+        ConsumerId = 1,
+        MeterId = "GN24A00187",
+        BillingPeriodStart = new DateOnly(2025, 8, 1),
+        BillingPeriodEnd = new DateOnly(2025, 9, 1),
+        TotalUnitsConsumed = 175.3,
+        BaseAmount = 901.80,
+        TaxAmount = 90.18,
+        GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, DateTimeKind.Utc),
+        DueDate = new DateOnly(2025, 9, 15),
+        PaidDate = new DateTime(2025, 9, 10, 10, 30, 0, DateTimeKind.Utc),
+        PaymentStatus = "Paid",
+        DisconnectionDate = null
+    },
+    new Billing
+    {
+        BillId = 2,
+        ConsumerId = 2,
+        MeterId = "LT24C00255",
+        BillingPeriodStart = new DateOnly(2025, 8, 1),
+        BillingPeriodEnd = new DateOnly(2025, 9, 1),
+        TotalUnitsConsumed = 910.5,
+        BaseAmount = 7296.12,
+        TaxAmount = 875.53,
+        GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, DateTimeKind.Utc),
+        DueDate = new DateOnly(2025, 9, 15),
+        PaidDate = new DateTime(2025, 9, 8, 14, 0, 0, DateTimeKind.Utc),
+        PaymentStatus = "Paid",
+        DisconnectionDate = null
+    },
+    new Billing
+    {
+        BillId = 3,
+        ConsumerId = 3,
+        MeterId = "GN24A00193",
+        BillingPeriodStart = new DateOnly(2025, 8, 1),
+        BillingPeriodEnd = new DateOnly(2025, 9, 1),
+        TotalUnitsConsumed = 225.2,
+        BaseAmount = 1264.20,
+        TaxAmount = 126.42,
+        GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, DateTimeKind.Utc),
+        DueDate = new DateOnly(2025, 9, 15),
+        PaidDate = new DateTime(2025, 9, 12, 11, 45, 0, DateTimeKind.Utc),
+        PaymentStatus = "Paid",
+        DisconnectionDate = null
+    },
+    new Billing
+    {
+        BillId = 4,
+        ConsumerId = 4,
+        MeterId = "HP24E00301",
+        BillingPeriodStart = new DateOnly(2025, 8, 1),
+        BillingPeriodEnd = new DateOnly(2025, 9, 1),
+        TotalUnitsConsumed = 154.5,
+        BaseAmount = 966.75,
+        TaxAmount = 77.34,
+        GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, DateTimeKind.Utc),
+        DueDate = new DateOnly(2025, 9, 15),
+        PaidDate = new DateTime(2025, 9, 7, 16, 20, 0, DateTimeKind.Utc),
+        PaymentStatus = "Paid",
+        DisconnectionDate = null
+    },
+    new Billing
+    {
+        BillId = 5,
+        ConsumerId = 5,
+        MeterId = "LT24I00419",
+        BillingPeriodStart = new DateOnly(2025, 8, 1),
+        BillingPeriodEnd = new DateOnly(2025, 9, 1),
+        TotalUnitsConsumed = 12221.3,
+        BaseAmount = 121655.60,
+        TaxAmount = 18248.34,
+        GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, DateTimeKind.Utc),
+        DueDate = new DateOnly(2025, 9, 15),
+        PaidDate = new DateTime(2025, 9, 5, 9, 15, 0, DateTimeKind.Utc),
+        PaymentStatus = "Paid",
+        DisconnectionDate = null
+    }
+);
+
+
+
             modelBuilder.Entity<OrgUnit>().HasData(
                 new OrgUnit
                 {
@@ -541,6 +626,7 @@ namespace SmartMeterWeb.Data.Context
 
             modelBuilder.Entity<MeterReading>().HasData(
     // Readings for Meter 1 (GN24A00187 - Residential)
+
     new MeterReading
     {
         Id = 1,
@@ -699,6 +785,7 @@ namespace SmartMeterWeb.Data.Context
         PowerFactor = 0.92,
         EnergyConsumed = 181050.4
     }
+
 );
         }
     }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251102180355_new2")]
+    partial class new2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +234,7 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             ConsumerId = 1L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 11, 2, 18, 3, 54, 520, DateTimeKind.Utc).AddTicks(674),
                             CreatedBy = "System",
                             Email = "priya.s@example.com",
                             IsDeleted = false,
@@ -245,7 +248,7 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             ConsumerId = 2L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 11, 2, 18, 3, 54, 520, DateTimeKind.Utc).AddTicks(1282),
                             CreatedBy = "System",
                             Email = "rohan.k@example.com",
                             IsDeleted = false,
@@ -259,7 +262,7 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             ConsumerId = 3L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 11, 2, 18, 3, 54, 520, DateTimeKind.Utc).AddTicks(1284),
                             CreatedBy = "System",
                             Email = "vikram.s@example.com",
                             IsDeleted = false,
@@ -273,7 +276,7 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             ConsumerId = 4L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 11, 2, 18, 3, 54, 520, DateTimeKind.Utc).AddTicks(1286),
                             CreatedBy = "System",
                             Email = "anjali.d@example.com",
                             IsDeleted = false,
@@ -287,7 +290,7 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             ConsumerId = 5L,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 11, 2, 18, 3, 54, 520, DateTimeKind.Utc).AddTicks(1287),
                             CreatedBy = "System",
                             Email = "contact@guptaindustries.com",
                             IsDeleted = false,

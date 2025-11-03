@@ -10,6 +10,7 @@ using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Services;
 using System.Text;
 using System.Text.Json.Serialization;
+using QuestPDF.Infrastructure;
 
 
 namespace SmartMeterWeb
@@ -38,13 +39,15 @@ namespace SmartMeterWeb
 
             builder.Services.AddScoped<IUserReportService, UserReportService>();
 
+            builder.Services.AddScoped<IPdfService, PdfService>();
 
 
 
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IConsumerService, ConsumerService>();
 
-            
+           
+
 
 
             builder.Services.AddControllers(options =>
@@ -109,10 +112,14 @@ namespace SmartMeterWeb
             builder.Services.AddScoped<IMeterReadingService, MeterReadingService>();
             builder.Services.AddScoped<IBillingService, BillingService>();
 
+            
 
             builder.Services.AddHttpContextAccessor();
+            QuestPDF.Settings.License = LicenseType.Community;
 
             var app = builder.Build();
+            app.UseDeveloperExceptionPage();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -6,5 +6,6 @@ namespace SmartMeterWeb.Interfaces
     {
         Task<BillingResponseDto> GenerateMonthlyBillAsync(BillingRequestDto dto);
         Task<IEnumerable<BillingResponseDto>> GetPreviousBillsAsync(long consumerId);
+       Task<BillingResponseDto?> GetBillByIdAsync(int billId);
     }
 }
