@@ -18,13 +18,14 @@ namespace SmartMeterWeb.Controllers
             _billingService = billingService;
             _pdfService = pdfService;
         }
-
+        
         [HttpPost("Generate")]
         public async Task<ActionResult<BillingResponseDto>> GenerateMonthlyBill([FromBody] BillingRequestDto dto)
         {
             try
             {
                 var bill = await _billingService.GenerateMonthlyBillAsync(dto);
+                var pdfBytes = _pdfService.GenerateBillPdf(bill);
                 return Ok(bill);
             }
             catch (Exception ex)

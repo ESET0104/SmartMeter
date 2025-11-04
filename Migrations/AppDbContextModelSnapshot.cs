@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -12,11 +11,9 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251103085938_InitialCreate@dev")]
-    partial class InitialCreatedev
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,6 +158,88 @@ namespace SmartMeterWeb.Migrations
                     b.ToTable("Billings", t =>
                         {
                             t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            BillId = 1L,
+                            BaseAmount = 901.79999999999995,
+                            BillingPeriodEnd = new DateOnly(2025, 9, 1),
+                            BillingPeriodStart = new DateOnly(2025, 8, 1),
+                            ConsumerId = 1L,
+                            DueDate = new DateOnly(2025, 9, 15),
+                            GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc),
+                            MeterId = "GN24A00187",
+                            PaidDate = new DateTime(2025, 9, 10, 10, 30, 0, 0, DateTimeKind.Utc),
+                            PaymentStatus = "Paid",
+                            TaxAmount = 90.180000000000007,
+                            TotalAmount = 0.0,
+                            TotalUnitsConsumed = 175.30000000000001
+                        },
+                        new
+                        {
+                            BillId = 2L,
+                            BaseAmount = 7296.1199999999999,
+                            BillingPeriodEnd = new DateOnly(2025, 9, 1),
+                            BillingPeriodStart = new DateOnly(2025, 8, 1),
+                            ConsumerId = 2L,
+                            DueDate = new DateOnly(2025, 9, 15),
+                            GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc),
+                            MeterId = "LT24C00255",
+                            PaidDate = new DateTime(2025, 9, 8, 14, 0, 0, 0, DateTimeKind.Utc),
+                            PaymentStatus = "Paid",
+                            TaxAmount = 875.52999999999997,
+                            TotalAmount = 0.0,
+                            TotalUnitsConsumed = 910.5
+                        },
+                        new
+                        {
+                            BillId = 3L,
+                            BaseAmount = 1264.2,
+                            BillingPeriodEnd = new DateOnly(2025, 9, 1),
+                            BillingPeriodStart = new DateOnly(2025, 8, 1),
+                            ConsumerId = 3L,
+                            DueDate = new DateOnly(2025, 9, 15),
+                            GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc),
+                            MeterId = "GN24A00193",
+                            PaidDate = new DateTime(2025, 9, 12, 11, 45, 0, 0, DateTimeKind.Utc),
+                            PaymentStatus = "Paid",
+                            TaxAmount = 126.42,
+                            TotalAmount = 0.0,
+                            TotalUnitsConsumed = 225.19999999999999
+                        },
+                        new
+                        {
+                            BillId = 4L,
+                            BaseAmount = 966.75,
+                            BillingPeriodEnd = new DateOnly(2025, 9, 1),
+                            BillingPeriodStart = new DateOnly(2025, 8, 1),
+                            ConsumerId = 4L,
+                            DueDate = new DateOnly(2025, 9, 15),
+                            GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc),
+                            MeterId = "HP24E00301",
+                            PaidDate = new DateTime(2025, 9, 7, 16, 20, 0, 0, DateTimeKind.Utc),
+                            PaymentStatus = "Paid",
+                            TaxAmount = 77.340000000000003,
+                            TotalAmount = 0.0,
+                            TotalUnitsConsumed = 154.5
+                        },
+                        new
+                        {
+                            BillId = 5L,
+                            BaseAmount = 121655.60000000001,
+                            BillingPeriodEnd = new DateOnly(2025, 9, 1),
+                            BillingPeriodStart = new DateOnly(2025, 8, 1),
+                            ConsumerId = 5L,
+                            DueDate = new DateOnly(2025, 9, 15),
+                            GeneratedAt = new DateTime(2025, 9, 1, 5, 0, 0, 0, DateTimeKind.Utc),
+                            MeterId = "LT24I00419",
+                            PaidDate = new DateTime(2025, 9, 5, 9, 15, 0, 0, DateTimeKind.Utc),
+                            PaymentStatus = "Paid",
+                            TaxAmount = 18248.34,
+                            TotalAmount = 0.0,
+                            TotalUnitsConsumed = 12221.299999999999
                         });
                 });
 

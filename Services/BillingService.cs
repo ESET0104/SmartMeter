@@ -8,12 +8,16 @@ namespace SmartMeterWeb.Services
 {
     public class BillingService : IBillingService
     {
+        private readonly IMailService _mailService;
         private readonly AppDbContext _context;
 
-        public BillingService(AppDbContext context)
+        public BillingService(AppDbContext context,IMailService mailService)
         {
             _context = context;
+            _mailService = mailService;
+            
         }
+
 
         public async Task<BillingResponseDto> GenerateMonthlyBillAsync(BillingRequestDto dto)
         {
@@ -100,7 +104,33 @@ namespace SmartMeterWeb.Services
             };
 
             _context.Billings.Add(bill);
+
             await _context.SaveChangesAsync();
+
+                        await _mailService.SendEmailAsync(
+                "msurendra.nitw@gmail.com",  
+                "Your Monthly Electricity Bill (TESTING)",
+                $@"
+                    <h3>Hello {consumer.Name},</h3>
+
+                    <p>Your monthly electricity bill for <b>{dto.Month}/{dto.Year}</b> has been generated.</p>
+
+                    <p>
+                        <b>Total Units:</b> {bill.TotalUnitsConsumed}<br>
+                        <b>Base Amount:</b> ₹{bill.BaseAmount}<br>
+                        <b>Tax Amount:</b> ₹{bill.TaxAmount}<br>
+                        <b>Total Payable:</b> ₹{bill.TotalAmount}<br>
+                        <b>Due Date:</b> {bill.DueDate}
+                    </p>
+
+                    <p>This is a <b>test email</b> sent only to the developer.</p>
+
+                    <p>Thank you,<br/>Smart Meter System</p>
+                "
+            );
+
+           
+
 
             return new BillingResponseDto
             {

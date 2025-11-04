@@ -58,9 +58,8 @@ nunit-*.xml
 temp chnage
 
 appsettings.Development.json
-note.md
 
-AppDbContextModelSnapshot.cs
+note.md
 
 
 
