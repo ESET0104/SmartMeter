@@ -107,6 +107,7 @@ namespace SmartMeterWeb.Services
 
             await _context.SaveChangesAsync();
 
+
                         await _mailService.SendEmailAsync(
                 "msurendra.nitw@gmail.com",  
                 "Your Monthly Electricity Bill (TESTING)",

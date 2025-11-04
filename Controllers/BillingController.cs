@@ -25,7 +25,6 @@ namespace SmartMeterWeb.Controllers
             try
             {
                 var bill = await _billingService.GenerateMonthlyBillAsync(dto);
-                var pdfBytes = _pdfService.GenerateBillPdf(bill);
                 return Ok(bill);
             }
             catch (Exception ex)
