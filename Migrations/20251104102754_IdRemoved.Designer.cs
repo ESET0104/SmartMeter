@@ -12,8 +12,8 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251104095525_IDAddedInAddressdeleted")]
-    partial class IDAddedInAddressdeleted
+    [Migration("20251104102754_IdRemoved")]
+    partial class IdRemoved
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,9 +52,6 @@ namespace SmartMeterWeb.Migrations
 
                     b.Property<string>("State")
                         .HasColumnType("text");
-
-                    b.Property<int?>("id")
-                        .HasColumnType("integer");
 
                     b.HasKey("AddressId");
 

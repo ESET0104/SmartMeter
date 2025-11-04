@@ -50,9 +50,6 @@ namespace SmartMeterWeb.Migrations
                     b.Property<string>("State")
                         .HasColumnType("text");
 
-                    b.Property<int?>("id")
-                        .HasColumnType("integer");
-
                     b.HasKey("AddressId");
 
                     b.HasIndex("ConsumerId");

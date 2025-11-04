@@ -5,24 +5,24 @@
 namespace SmartMeterWeb.Migrations
 {
     /// <inheritdoc />
-    public partial class IDAddedInAddressdeleted : Migration
+    public partial class IdRemoved : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Id",
-                table: "Addresses",
-                newName: "id");
+            migrationBuilder.DropColumn(
+                name: "id",
+                table: "Addresses");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
+            migrationBuilder.AddColumn<int>(
                 name: "id",
                 table: "Addresses",
-                newName: "Id");
+                type: "integer",
+                nullable: true);
         }
     }
 }
