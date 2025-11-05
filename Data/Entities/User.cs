@@ -14,7 +14,8 @@ namespace SmartMeterWeb.Data.Entities
         public string? Phone { get; set; }
         public DateTime? LastLoginUtc { get; set; }
         [Required] public bool IsActive { get; set; } = true;
-        
+        public int FailedLoginAttempts { get; set; } = 0;
+        public DateTime? LoginLockEnd {  get; set; }
 
     }
 }

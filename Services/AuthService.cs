@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
+using SmartMeterWeb.Configs;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Interfaces;
@@ -98,22 +99,38 @@ namespace SmartMeterWeb.Services
             if (request.Role == "User")
             {
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == request.UsernameOrEmail);
-                if(user == null)
+                if (user == null)
                 {
                     await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "User", false, "User not found", ipAddress);
                     throw new Exception("User not found");
                 }
-                else if(!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                else if (user.LoginLockEnd.HasValue && user.LoginLockEnd.Value > DateTime.UtcNow)
                 {
-                    await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "User", false, "Wrong Password", ipAddress);
-                    throw new Exception("Wrong Password");
+                    var remaining = user.LoginLockEnd.Value - DateTime.UtcNow;
+                    throw new Exception($"Account locked. Try again in {remaining.Minutes} minutes.");
+                }
+                else if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                {
+                    user.FailedLoginAttempts++;
+                    if (user.FailedLoginAttempts >= AuthSettings.MaxAttempts)
+                    {
+                        user.LoginLockEnd = DateTime.UtcNow.Add(AuthSettings.Duration);
+                        await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "User", false, "Wrong Password", ipAddress);
+                        await _context.SaveChangesAsync();
+                        throw new Exception("Invalid Password. Account locked due to too many failed attempts");
+                    }
+                    else
+                    {
+                        await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "User", false, "Wrong Password", ipAddress);
+                        throw new Exception("Wrong Password");
+                    }
                 }
 
                 await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "User", true, "Login successful", ipAddress);
                 var token = GenerateJwtToken(user.UserName, "User");
                 user.LastLoginUtc = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
-                return new AuthResponseDto { Name= user.UserName, Role = "User", Token = token };
+                return new AuthResponseDto { Name = user.UserName, Role = "User", Token = token };
             }
             else if (request.Role == "Consumer")
             {
@@ -123,20 +140,41 @@ namespace SmartMeterWeb.Services
                     await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "Consumer", false, "Invalid Credentials", ipAddress);
                     throw new Exception("Invalid credentials");
                 }
+                else if (user.LoginLockEnd.HasValue && user.LoginLockEnd.Value > DateTime.UtcNow)
+                {
+                    var remaining = user.LoginLockEnd.Value - DateTime.UtcNow;
+                    throw new Exception($"Account locked. Try again in {remaining.Minutes} minutes.");
+                }
+
+                else if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                {
+                    user.FailedLoginAttempts++;
+                    if (user.FailedLoginAttempts >= AuthSettings.MaxAttempts)
+                    {
+                        user.LoginLockEnd = DateTime.UtcNow.Add(AuthSettings.Duration);
+                        await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "Consumer", false, "Wrong Password", ipAddress);
+                        await _context.SaveChangesAsync();
+                        throw new Exception("Invalid Password. Account locked due to too many failed attempts");
+                    }
+                    else
+                    {
+                        await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "Consumer", false, "Wrong Password", ipAddress);
+                        throw new Exception("Wrong Password");
+                    }
+                }
 
                 await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, "Consumer", true, "Login successful", ipAddress);
-                var token = GenerateJwtToken(user.Email, "Consumer");
-                
+                var token = GenerateJwtToken(user.Name, "User");
+                await _context.SaveChangesAsync();
                 return new AuthResponseDto { Name = user.Name, Role = "Consumer", Token = token };
             }
             else
             {
-                await _logger.LogLoginAttemptAsync(request.UsernameOrEmail, request.Role, false, "Invalid Role", ipAddress);
                 throw new Exception("Invalid Role");
             }
         }
 
-        private string GenerateJwtToken(string username, string role)
+            private string GenerateJwtToken(string username, string role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
