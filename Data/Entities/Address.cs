@@ -12,7 +12,6 @@ namespace SmartMeterWeb.Data.Entities
         public string? City { get; set; }
         public string? State { get; set; }
         public string? PinCode { get; set; }
-
         public Consumer Consumer { get; set; } = null!;
     }
 

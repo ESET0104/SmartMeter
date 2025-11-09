@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251104105045_LoginLockUser")]
+    partial class LoginLockUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,14 +265,8 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("FailedLoginAttempts")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LoginLockEnd")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -322,7 +319,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "priya.s@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Priya Sharma",
                             OrgUnitId = 5,
@@ -337,7 +333,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "rohan.k@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Rohan Kumar",
                             OrgUnitId = 5,
@@ -352,7 +347,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "vikram.s@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Vikram Singh",
                             OrgUnitId = 6,
@@ -367,7 +361,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "anjali.d@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Anjali Devi",
                             OrgUnitId = 6,
@@ -382,7 +375,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "contact@guptaindustries.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Gupta Industries",
                             OrgUnitId = 5,

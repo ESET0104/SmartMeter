@@ -22,6 +22,8 @@ namespace SmartMeterWeb.Data.Entities
         [Required] public string PasswordHash { get; set; }
         [Required] public bool IsDeleted { get; set; } = false;
         public string? PhotoPath { get; set; }
+        public int FailedLoginAttempts { get; set; } = 0;
+        public DateTime? LoginLockEnd { get; set; }
 
     }
 }

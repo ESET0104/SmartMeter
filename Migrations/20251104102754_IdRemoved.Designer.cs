@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251104102754_IdRemoved")]
+    partial class IdRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,14 +265,8 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("FailedLoginAttempts")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LoginLockEnd")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -322,7 +319,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "priya.s@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Priya Sharma",
                             OrgUnitId = 5,
@@ -337,7 +333,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "rohan.k@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Rohan Kumar",
                             OrgUnitId = 5,
@@ -352,7 +347,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "vikram.s@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Vikram Singh",
                             OrgUnitId = 6,
@@ -367,7 +361,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "anjali.d@example.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Anjali Devi",
                             OrgUnitId = 6,
@@ -382,7 +375,6 @@ namespace SmartMeterWeb.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = "System",
                             Email = "contact@guptaindustries.com",
-                            FailedLoginAttempts = 0,
                             IsDeleted = false,
                             Name = "Gupta Industries",
                             OrgUnitId = 5,
@@ -1364,16 +1356,10 @@ namespace SmartMeterWeb.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<int>("FailedLoginAttempts")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastLoginUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("LoginLockEnd")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PasswordHash")
@@ -1400,7 +1386,6 @@ namespace SmartMeterWeb.Migrations
                             UserId = 1L,
                             DisplayName = "System Administrator",
                             Email = "admin@smartmeter.com",
-                            FailedLoginAttempts = 0,
                             IsActive = true,
                             PasswordHash = "$2a$11$nG48 / pPMTnCvehLK.ebbXeEXvw5XqJwPLkHPsH5Cuc2466gvIrP8C",
                             Phone = "9876543210",
@@ -1411,7 +1396,6 @@ namespace SmartMeterWeb.Migrations
                             UserId = 2L,
                             DisplayName = "Ganesh",
                             Email = "ganesh@smartmeter.com",
-                            FailedLoginAttempts = 0,
                             IsActive = true,
                             PasswordHash = "$2a$11$nlUMkcxzYytmlcZWNuDQ0enFXhKDKD9gAHtr45pHlKA.eaPJ9Vi/.",
                             Phone = "9123456780",
@@ -1422,7 +1406,6 @@ namespace SmartMeterWeb.Migrations
                             UserId = 3L,
                             DisplayName = "Support Engineer",
                             Email = "support1@smartmeter.com",
-                            FailedLoginAttempts = 0,
                             IsActive = true,
                             PasswordHash = "$2a$11$6EK8mbMOJbJLh0adk1hiQeWeij8lW3OeEeOHyB4/aRRp4Tv1nxCfS",
                             Phone = "9998887770",
@@ -1433,7 +1416,6 @@ namespace SmartMeterWeb.Migrations
                             UserId = 4L,
                             DisplayName = "Energy Auditor",
                             Email = "auditor@smartmeter.com",
-                            FailedLoginAttempts = 0,
                             IsActive = true,
                             PasswordHash = "$2a$11$U1yXqZUuWV3AoF8Nv78NlePvk7.65UckxVZQ3Nn3qoSdtjpkL9Nn6",
                             Phone = "9988776655",
@@ -1444,7 +1426,6 @@ namespace SmartMeterWeb.Migrations
                             UserId = 5L,
                             DisplayName = "Viewer Account",
                             Email = "viewer@smartmeter.com",
-                            FailedLoginAttempts = 0,
                             IsActive = true,
                             PasswordHash = "$2a$11$4A4WI6j0RrYKDbl6ZAmhze6JNH..fZL98NexIsYTAR/Jk9JtFoZv6",
                             Phone = "9876501234",
