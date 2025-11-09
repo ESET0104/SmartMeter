@@ -1,16 +1,17 @@
 
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 using SmartMeterWeb.Configs;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Services;
 using System.Text;
 using System.Text.Json.Serialization;
-using QuestPDF.Infrastructure;
 
 
 namespace SmartMeterWeb
@@ -46,7 +47,14 @@ namespace SmartMeterWeb
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IConsumerService, ConsumerService>();
 
-           
+           // builder.Services.AddControllers();
+
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+            });
+
 
 
 
