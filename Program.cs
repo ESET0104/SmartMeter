@@ -46,7 +46,7 @@ namespace SmartMeterWeb
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IConsumerService, ConsumerService>();
 
-           
+            builder.Services.AddHostedService<RabbitmqReadingService>();
 
 
 

@@ -30,7 +30,7 @@ namespace SmartMeterWeb.Services
                 Voltage = dto.Voltage,
                 Current = dto.Current,
                 PowerFactor = dto.PowerFactor,
-                ReadingDateTime = dto.ReadingDate
+                ReadingDateTime = DateTime.SpecifyKind(dto.ReadingDate, DateTimeKind.Utc)
             };
 
             _context.MeterReadings.Add(reading);
