@@ -28,7 +28,8 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<LoginLog> LoginLogs { get; set; }
         public DbSet<CustomerCareMessage> CustomerCareMessages { get; set; }
 
-        
+        public DbSet<CustomerCareReply> CustomerCareReplies { get; set; }
+
 
         //To update database after making any changes in the classes, run these
 
