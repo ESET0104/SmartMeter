@@ -9,6 +9,7 @@ using QuestPDF.Infrastructure;
 using SmartMeterWeb.Configs;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Interfaces;
+using SmartMeterWeb.Middlewares;
 using SmartMeterWeb.Services;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -128,6 +129,7 @@ namespace SmartMeterWeb
             var app = builder.Build();
             app.UseDeveloperExceptionPage();
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

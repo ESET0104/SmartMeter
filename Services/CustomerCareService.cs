@@ -1,7 +1,8 @@
-﻿using SmartMeterWeb.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
+using SmartMeterWeb.Exceptions;
 using SmartMeterWeb.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using SmartMeterWeb.Models;
 
 
@@ -64,23 +65,32 @@ namespace SmartMeterWeb.Services
             var consumer = await _context.CustomerCareMessages
                 .FirstOrDefaultAsync(c => c.ConsumerId == dto.consumerID);
 
+            
             if (consumer == null)
-                throw new Exception("Consumer not found");
+                throw new ApiException("Consumer not found", 404);
 
             string customerEmail = consumer.mailid;
 
+
             if (string.IsNullOrEmpty(customerEmail))
-                throw new Exception("Consumer email not  available");
-            
+                throw new ApiException("Consumer email not available", 400);
 
+
+            try
+            {
                 await _mailService.SendEmailAsync(
-        customerEmail,
-        "replying to your query",
-        dto.MessageText
-
-    );
+                    customerEmail,
+                    "Reply to your query",
+                    dto.MessageText
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"Failed to send email: {ex.Message}", 500);
+            }
 
         }
+
 
     }
 }
