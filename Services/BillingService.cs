@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Exceptions;
@@ -129,7 +130,7 @@ namespace SmartMeterWeb.Services
                             <b>Due Date:</b> {bill.DueDate}
                         </p>
                         <p>Thank you,<br/>Smart Meter System</p>"
-                );
+                );EntityEntryGraphIterator 
             }
             catch (Exception ex)
             {
