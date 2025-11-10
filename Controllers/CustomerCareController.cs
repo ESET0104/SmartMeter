@@ -5,6 +5,8 @@ using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Models;
+using SmartMeterWeb.Services;
+using System.Collections.Generic;
 namespace SmartMeterWeb.Controllers
 {
     [ApiController]
@@ -14,11 +16,14 @@ namespace SmartMeterWeb.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMailService _mailService;
+        private readonly ICustomerCareService _customerCareService;
 
-        public CustomerCareController(AppDbContext context, IMailService mailService)
+        public CustomerCareController(AppDbContext context, IMailService mailService, ICustomerCareService customerCareService)
         {
             _context = context;
             _mailService = mailService;
+            _customerCareService = customerCareService;
+
         }
 
         [AllowAnonymous]
@@ -29,33 +34,29 @@ namespace SmartMeterWeb.Controllers
             _context.CustomerCareMessages.Add(message);
             await _context.SaveChangesAsync();
             await _mailService.SendEmailAsync(
-                "msurendranitw@gmail.com",
+                message.mailid,
                 "Customer Care",
                 "<p>Your issue has been received. We will resolve it within 3 days.</p>"
             );
-
         }
+
         [AllowAnonymous]
         [HttpGet("all")]
         public async Task<List<CustomerCareMessage>> GetAllMessagesAsync()
         {
-            return await _context.CustomerCareMessages
-                .OrderByDescending(m => m.MessageId)
-                .ToListAsync();
+            Task<List<CustomerCareMessage>> messages = _customerCareService.GetAllMessagesAsync();
+            return await messages;
 
         }
-        //[AllowAnonymous]
-        //[HttpGet("test-email")]
-        //public async Task<IActionResult> TestEmail()
-        //{
-        //    await _mailService.SendEmailAsync(
-        //        "msurendranitw@gmail.com",
-        //        "Customer Issue Received",
-        //        "<p>Your issue has been received. We will resolve it within 3 days.</p>"
-        //    );
 
-        //    return Ok("Email sent!");
-        //}
+        [AllowAnonymous]
+        [HttpPost("reply")]
+        public async Task SendReplyToCustomer(CustomerReplyDto dto)
+        {
+            await _customerCareService.SendReplyToCustomer(dto);
+            
+        }
+
 
     }
 }
