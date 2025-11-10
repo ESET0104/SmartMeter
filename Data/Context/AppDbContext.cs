@@ -27,6 +27,7 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<OrgUnit> OrgUnits { get; set; }
         public DbSet<LoginLog> LoginLogs { get; set; }
         public DbSet<CustomerCareMessage> CustomerCareMessages { get; set; }
+        public DbSet<SolarMeterReading> SolarMeterReadings { get; set; }
 
         
 

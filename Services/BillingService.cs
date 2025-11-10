@@ -87,7 +87,25 @@ namespace SmartMeterWeb.Services
 
             // Add BaseRate and tax
             baseAmount += tariff.BaseRate;
+
+            var solarReading = await _context.SolarMeterReadings
+                .Where(s => s.MeterId == meter.MeterSerialNo &&
+                            s.ReadingDateTime >= startDate &&
+                            s.ReadingDateTime <= endDate)
+                .ToListAsync();
+
+            double totalExportedEnergy = solarReading.Sum(s => s.EnergyExportedToGrid);
+            double solarDiscount = Math.Round(totalExportedEnergy * 1.5, 2); // ₹1.5 per exported unit
+
+            if (solarDiscount > 0)
+            {
+                baseAmount -= solarDiscount;
+                if (baseAmount < 0) baseAmount = 0; // avoid negative bills
+            }
+
             double taxAmount = Math.Round(baseAmount * tariff.TaxRate / 100, 2);
+
+
 
             var bill = new Billing
             {
