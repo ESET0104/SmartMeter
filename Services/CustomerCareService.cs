@@ -1,7 +1,8 @@
-﻿using SmartMeterWeb.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
+using SmartMeterWeb.Exceptions;
 using SmartMeterWeb.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using SmartMeterWeb.Models;
 
 
@@ -9,15 +10,7 @@ namespace SmartMeterWeb.Services
 {
     public class CustomerCareService : ICustomerCareService
     {
-        //private readonly AppDbContext _context;
-
-        // private readonly IMailService _mailService;
-
-        //public CustomerCareService(AppDbContext context)
-        //{
-        //    _context = context;
-
-        //}
+        
         private readonly AppDbContext _context;
         private readonly IMailService _mailService;
 
@@ -34,11 +27,10 @@ namespace SmartMeterWeb.Services
                 ConsumerId = dto.ConsumerId,
                 Name = dto.Name,
                 Phone = dto.PhoneNumber,
-                Message = dto.Message
+                Message = dto.Message,
+                mailid=dto.mailid
             };
-            //await _mailService.SendEmailAsync(
-            //    "msurendra.nitw@gmail.com", "your issue will be resolved", "it will take in 3 days"
-            //    );
+
             _context.CustomerCareMessages.Add(message);
             await _context.SaveChangesAsync();
             await _mailService.SendEmailAsync(
@@ -46,8 +38,6 @@ namespace SmartMeterWeb.Services
         "Customer Issue Received",
         "<p>Your issue has been received. We will resolve it within 3 days.</p>"
     );
-
-
 
         }
 
@@ -59,6 +49,47 @@ namespace SmartMeterWeb.Services
 
         }
 
+
+        public async Task SendReplyToCustomer(CustomerReplyDto dto)
+        {
+            var reply = new CustomerCareReply
+            {
+                ResponseId = dto.ResponseId,
+                consumerID = dto.consumerID,
+                MessageText = dto.MessageText
+            };
+            await _context.CustomerCareReplies.AddAsync(reply);
+
+            await _context.SaveChangesAsync();
+
+            var consumer = await _context.CustomerCareMessages
+                .FirstOrDefaultAsync(c => c.ConsumerId == dto.consumerID);
+
+            
+            if (consumer == null)
+                throw new ApiException("Consumer not found", 404);
+
+            string customerEmail = consumer.mailid;
+
+
+            if (string.IsNullOrEmpty(customerEmail))
+                throw new ApiException("Consumer email not available", 400);
+
+
+            try
+            {
+                await _mailService.SendEmailAsync(
+                    customerEmail,
+                    "Reply to your query",
+                    dto.MessageText
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException($"Failed to send email: {ex.Message}", 500);
+            }
+
+        }
 
 
     }

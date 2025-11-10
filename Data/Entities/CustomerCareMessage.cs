@@ -12,6 +12,8 @@ namespace SmartMeterWeb.Data.Entities
         public long ConsumerId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
+
+        public string mailid { get; set; }
         public string Message { get; set; }
     }
 }

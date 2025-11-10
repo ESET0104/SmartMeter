@@ -8,5 +8,7 @@ namespace SmartMeterWeb.Interfaces
         Task AddMessageAsync(CustomerCareDto dto);
         Task<List<CustomerCareMessage>> GetAllMessagesAsync();
 
+        Task SendReplyToCustomer(CustomerReplyDto dto);
+
     }
 }

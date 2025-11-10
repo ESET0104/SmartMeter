@@ -1,8 +1,10 @@
-﻿using SmartMeterWeb.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
+using SmartMeterWeb.Exceptions;
 using SmartMeterWeb.Interfaces;
 using static SmartMeterWeb.Models.Billing.BillingDto;
-using Microsoft.EntityFrameworkCore;
 
 namespace SmartMeterWeb.Services
 {
@@ -22,10 +24,12 @@ namespace SmartMeterWeb.Services
         public async Task<BillingResponseDto> GenerateMonthlyBillAsync(BillingRequestDto dto)
         {
             var consumer = await _context.Consumers.FirstOrDefaultAsync(c => c.ConsumerId == dto.ConsumerId);
-            if (consumer == null) throw new Exception("Consumer not found");
+            if (consumer == null)
+                throw new ApiException("Consumer not found", 404);
 
             var meter = await _context.Meters.FirstOrDefaultAsync(m => m.MeterSerialNo == dto.MeterId && m.ConsumerId == dto.ConsumerId);
-            if (meter == null) throw new Exception("Meter not found");
+            if (meter == null)
+                throw new ApiException("Meter not found", 404);
 
             var startDate = DateTime.SpecifyKind(new DateTime(dto.Year, dto.Month, 1), DateTimeKind.Utc);
             var endDate = DateTime.SpecifyKind(startDate.AddMonths(1).AddDays(-1), DateTimeKind.Utc);
@@ -36,13 +40,15 @@ namespace SmartMeterWeb.Services
                             r.ReadingDateTime <= endDate)
                 .ToListAsync();
 
-            if (!readings.Any()) throw new Exception("No readings found");
+            if (!readings.Any())
+                throw new ApiException("No readings found for the given month", 404);
 
             var tariff = await _context.Tariffs
                 .Where(t => t.TariffId == consumer.TariffId)
                 .FirstOrDefaultAsync();
 
-            if (tariff == null) throw new Exception("No applicable tariff found");
+            if (tariff == null)
+                throw new ApiException("Applicable tariff not found", 404);
 
             var todRules = await _context.TodRules
                 .Where(t => t.TariffId == tariff.TariffId && !t.IsDeleted)
@@ -108,30 +114,29 @@ namespace SmartMeterWeb.Services
             await _context.SaveChangesAsync();
 
 
-                        await _mailService.SendEmailAsync(
-                "msurendra.nitw@gmail.com",  
-                "Your Monthly Electricity Bill (TESTING)",
-                $@"
-                    <h3>Hello {consumer.Name},</h3>
-
-                    <p>Your monthly electricity bill for <b>{dto.Month}/{dto.Year}</b> has been generated.</p>
-
-                    <p>
-                        <b>Total Units:</b> {bill.TotalUnitsConsumed}<br>
-                        <b>Base Amount:</b> ₹{bill.BaseAmount}<br>
-                        <b>Tax Amount:</b> ₹{bill.TaxAmount}<br>
-                        <b>Total Payable:</b> ₹{bill.TotalAmount}<br>
-                        <b>Due Date:</b> {bill.DueDate}
-                    </p>
-
-                    <p>This is a <b>test email</b> sent only to the developer.</p>
-
-                    <p>Thank you,<br/>Smart Meter System</p>
-                "
-            );
-
-           
-
+            try
+            {
+                await _mailService.SendEmailAsync(
+                    consumer.Email ?? "msurendra.nitw@gmail.com", // fallback for testing
+                    "Your Monthly Electricity Bill",
+                    $@"
+                        <h3>Hello {consumer.Name},</h3>
+                        <p>Your monthly electricity bill for <b>{dto.Month}/{dto.Year}</b> has been generated.</p>
+                        <p>
+                            <b>Total Units:</b> {bill.TotalUnitsConsumed}<br/>
+                            <b>Base Amount:</b> ₹{bill.BaseAmount}<br/>
+                            <b>Tax Amount:</b> ₹{bill.TaxAmount}<br/>
+                            <b>Total Payable:</b> ₹{bill.TotalAmount}<br/>
+                            <b>Due Date:</b> {bill.DueDate}
+                        </p>
+                        <p>Thank you,<br/>Smart Meter System</p>"
+                );EntityEntryGraphIterator 
+            }
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex, "Error sending email for bill {BillId}", bill.BillId);
+                throw new ApiException("Bill generated but failed to send email notification.", 500);
+            }
 
             return new BillingResponseDto
             {
@@ -149,43 +154,67 @@ namespace SmartMeterWeb.Services
 
         public async Task<IEnumerable<BillingResponseDto>> GetPreviousBillsAsync(long consumerId)
         {
-            var bills = await _context.Billings
-                .Where(b => b.ConsumerId == consumerId)
-                .OrderByDescending(b => b.BillingPeriodStart)
-                .Select(b => new BillingResponseDto
-                {
-                    BillId = b.BillId,
-                    ConsumerId = b.ConsumerId,
-                    MeterId = b.MeterId,
-                    TotalUnitsConsumed = b.TotalUnitsConsumed,
-                    BaseAmount = b.BaseAmount,
-                    TaxAmount = b.TaxAmount,
-                    TotalAmount = b.TotalAmount,
-                    BillingMonth = $"{b.BillingPeriodStart:MMM yyyy}",
-                    PaymentStatus = b.PaymentStatus
-                })
-                .ToListAsync();
+            try
+            {
+                var bills = await _context.Billings
+                    .Where(b => b.ConsumerId == consumerId)
+                    .OrderByDescending(b => b.BillingPeriodStart)
+                    .Select(b => new BillingResponseDto
+                    {
+                        BillId = b.BillId,
+                        ConsumerId = b.ConsumerId,
+                        MeterId = b.MeterId,
+                        TotalUnitsConsumed = b.TotalUnitsConsumed,
+                        BaseAmount = b.BaseAmount,
+                        TaxAmount = b.TaxAmount,
+                        TotalAmount = b.TotalAmount,
+                        BillingMonth = $"{b.BillingPeriodStart:MMM yyyy}",
+                        PaymentStatus = b.PaymentStatus
+                    })
+                    .ToListAsync();
 
-            return bills;
+                if (!bills.Any())
+                    throw new ApiException("No previous bills found for this consumer", 404);
+
+                return bills;
+
+            }
+
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex, "Error retrieving previous bills for consumer {ConsumerId}", consumerId);
+                throw new ApiException("Failed to retrieve billing history", 500);
+            }
+
         }
 
         public async Task<BillingResponseDto?> GetBillByIdAsync(int billId)
         {
-            var bill = await _context.Billings.FirstOrDefaultAsync(b => b.BillId == billId);
-            if (bill == null) return null;
-
-            return new BillingResponseDto
+            try
             {
-                BillId = bill.BillId,
-                ConsumerId = bill.ConsumerId,
-                MeterId = bill.MeterId,
-                TotalUnitsConsumed = bill.TotalUnitsConsumed,
-                BaseAmount = bill.BaseAmount,
-                TaxAmount = bill.TaxAmount,
-                TotalAmount = bill.TotalAmount,
-                BillingMonth = $"{bill.BillingPeriodStart:MM-yyyy}",
-                PaymentStatus = bill.PaymentStatus
-            };
+                var bill = await _context.Billings.FirstOrDefaultAsync(b => b.BillId == billId);
+                if (bill == null) return null;
+
+                return new BillingResponseDto
+                {
+                    BillId = bill.BillId,
+                    ConsumerId = bill.ConsumerId,
+                    MeterId = bill.MeterId,
+                    TotalUnitsConsumed = bill.TotalUnitsConsumed,
+                    BaseAmount = bill.BaseAmount,
+                    TaxAmount = bill.TaxAmount,
+                    TotalAmount = bill.TotalAmount,
+                    BillingMonth = $"{bill.BillingPeriodStart:MM-yyyy}",
+                    PaymentStatus = bill.PaymentStatus
+                };
+
+            }
+
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex, "Error retrieving bill with ID {BillId}", billId);
+                throw new ApiException("Failed to fetch bill details", 500);
+            }
         }
 
     }
