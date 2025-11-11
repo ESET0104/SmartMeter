@@ -1,4 +1,4 @@
-
+﻿
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
+using Serilog;
 using SmartMeterWeb.Configs;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Interfaces;
@@ -22,6 +23,17 @@ namespace SmartMeterWeb
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // ✅ Setup Serilog logger
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    path: "Logs/smartmeter-log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 7, // Keep 7 days of logs
+                    shared: true)
+                .CreateLogger();
+            builder.Host.UseSerilog();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
