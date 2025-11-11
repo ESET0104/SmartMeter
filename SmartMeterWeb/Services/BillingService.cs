@@ -117,14 +117,14 @@ namespace SmartMeterWeb.Services
             try
             {
                 await _mailService.SendEmailAsync(
-                    consumer.Email ?? "msurendra.nitw@gmail.com", // fallback for testing
+                    consumer.Email ?? "user.test@local.com", // fallback for testing
                     "Your Monthly Electricity Bill",
                     $@"
                         <h3>Hello {consumer.Name},</h3>
                         <p>Your monthly electricity bill for <b>{dto.Month}/{dto.Year}</b> has been generated.</p>
                         <p>
                             <b>Total Units:</b> {bill.TotalUnitsConsumed}<br/>
-                            <b>Base Amount:</b> ₹{bill.BaseAmount}<br/>
+                            <b>Base Amount:</b> ₹{bill.BaseAmount}<br/> 
                             <b>Tax Amount:</b> ₹{bill.TaxAmount}<br/>
                             <b>Total Payable:</b> ₹{bill.TotalAmount}<br/>
                             <b>Due Date:</b> {bill.DueDate}
