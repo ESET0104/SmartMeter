@@ -5,49 +5,46 @@ using SmartMeterWeb.Models.UserTarrif;
 
 namespace SmartMeterWeb.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     //[Authorize(Roles = "User")]
-
-    public class TariffController : ControllerBase
+    public class TariffController : BaseController
     {
         private readonly ITariffService _tariffService;
 
-        public TariffController (ITariffService tariffService)
+        public TariffController(ITariffService tariffService)
         {
             _tariffService = tariffService;
         }
-
 
         [AllowAnonymous]
         [HttpPut("{tariffId}")]
         public async Task<IActionResult> UpdateTariff(int tariffId, [FromBody] UpdateTariffDto dto)
         {
-            var success = await _tariffService.UpdateTariffAsync(tariffId, dto);
-            if (!success)
-                return NotFound(new { Message = "Tariff not found" });
-            return Ok(new { Message = "Tariff updated successfully" });
+            var result = await _tariffService.UpdateTariffAsync(tariffId, dto);
+            return result
+                ? Success<object>(null, "Tariff updated successfully")
+                : Error("Tariff not found", 404);
         }
 
         [AllowAnonymous]
         [HttpPut("todrule/{todRuleId}")]
         public async Task<IActionResult> UpdateTodRule(int todRuleId, [FromBody] UpdateTodRuleDto dto)
         {
-            var success = await _tariffService.UpdateTodRuleAsync(todRuleId, dto);
-            if (!success)
-                return NotFound(new { Message = "TOD Rule not found" });
-            return Ok(new { Message = "TOD Rule updated successfully" });
+            var result = await _tariffService.UpdateTodRuleAsync(todRuleId, dto);
+            return result
+                ? Success<object>(null, "TOD Rule updated successfully")
+                : Error("TOD Rule not found", 404);
         }
 
         [AllowAnonymous]
         [HttpPut("slab/{tariffSlabId}")]
         public async Task<IActionResult> UpdateTariffSlab(int tariffSlabId, [FromBody] UpdateTariffSlabDto dto)
         {
-            var success = await _tariffService.UpdateTariffSlabAsync(tariffSlabId, dto);
-            if (!success)
-                return NotFound(new { Message = "Tariff Slab not found" });
-            return Ok(new { Message = "Tariff Slab updated successfully" });
+            var result = await _tariffService.UpdateTariffSlabAsync(tariffSlabId, dto);
+            return result
+                ? Success<object>(null, "Tariff Slab updated successfully")
+                : Error("Tariff Slab not found", 404);
         }
-
     }
 }

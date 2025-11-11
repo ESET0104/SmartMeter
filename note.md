@@ -1,4 +1,4 @@
-## Daily Report
+﻿## Daily Report
  
 Team Name: Nexus
 Project Name: SmartMeterWeb
@@ -132,8 +132,8 @@ Daily Report
  Project Name: SmartMeterWeb 
 Team Member: Surendra Melam 
 Date: 03-11
-Task/Tasks:�
-�1.fixed email functionality -- working
+Task/Tasks: 
+ 1.fixed email functionality -- working
 2. adding method to generate a pdf for bill with bill id and download the pdf 
 Time Consumed: 3 hrs. 
 -----------
@@ -144,3 +144,48 @@ Time Consumed: 3 hrs.
   "consumerID": 1,
   "messageText": "we will take care of it "
 }
+
+## What is Middleware?
+
+Think of middleware as a chain of filters or pipes that every HTTP request and response passes through.
+
+When a request hits your backend, ASP.NET Core doesn’t directly jump into your controller — it passes through a series of middleware components first.
+
+Each middleware can:
+
+Look at the request
+
+Do something (like logging, auth, error catching, etc.)
+
+Optionally pass it to the next middleware in the pipeline
+
+
+## Api stnadardzation 
+
+## Standard API Response Structure
+# Success Response
+{
+  "success": true,
+  "message": "Tariff updated successfully",
+  "data": {
+    "tariffId": 1,
+    "name": "Residential",
+    "baseRate": 5.5
+  },
+  "time": "2025-11-10T20:55:00Z"
+}
+
+# Error Response
+{
+  "success": false,
+  "message": "Tariff not found",
+  "data": null,
+  "time": "2025-11-10T20:55:00Z"
+}
+
+# next commit 
+added looger for few services
+# after implementing base controller
+
+TariffController → BaseController → ControllerBase
+

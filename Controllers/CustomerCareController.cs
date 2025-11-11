@@ -12,7 +12,7 @@ namespace SmartMeterWeb.Controllers
     [ApiController]
     [Route("api/[controller]")]
    // [Authorize]
-    public class CustomerCareController: ControllerBase
+    public class CustomerCareController: BaseController
     {
         private readonly AppDbContext _context;
         private readonly IMailService _mailService;
@@ -28,33 +28,53 @@ namespace SmartMeterWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost("send")]
-       
-        public async Task AddMessageAsync(CustomerCareMessage message)
+
+        public async Task<IActionResult> AddMessageAsync([FromBody] CustomerCareDto dto)
         {
-            _context.CustomerCareMessages.Add(message);
-            await _context.SaveChangesAsync();
-            await _mailService.SendEmailAsync(
-                message.mailid,
-                "Customer Care",
-                "<p>Your issue has been received. We will resolve it within 3 days.</p>"
-            );
+            try
+            {
+                await _customerCareService.AddMessageAsync(dto);
+                return Success<object>(null, "Your message has been received. We’ll respond within 3 days.");
+            }
+            catch (Exception ex)
+            {
+                return Error($"Failed to submit message: {ex.Message}", 500);
+            }
         }
 
         [AllowAnonymous]
         [HttpGet("all")]
-        public async Task<List<CustomerCareMessage>> GetAllMessagesAsync()
+        public async Task<IActionResult> GetAllMessagesAsync()
         {
-            Task<List<CustomerCareMessage>> messages = _customerCareService.GetAllMessagesAsync();
-            return await messages;
+            try
+            {
+                var messages = await _customerCareService.GetAllMessagesAsync();
+
+                if (messages == null || !messages.Any())
+                    return Error("No messages found", 404);
+
+                return Success(messages, "Messages fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return Error($"Failed to fetch messages: {ex.Message}", 500);
+            }
 
         }
 
         [AllowAnonymous]
         [HttpPost("reply")]
-        public async Task SendReplyToCustomer(CustomerReplyDto dto)
+        public async Task<IActionResult> SendReplyToCustomer([FromBody] CustomerReplyDto dto)
         {
-            await _customerCareService.SendReplyToCustomer(dto);
-            
+            try
+            {
+                await _customerCareService.SendReplyToCustomer(dto);
+                return Success<object>(null, "Reply sent to the customer successfully.");
+            }
+            catch (Exception ex)
+            {
+                return Error($"Failed to send reply: {ex.Message}", 500);
+            }
         }
 
 

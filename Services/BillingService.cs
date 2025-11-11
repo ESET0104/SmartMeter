@@ -130,7 +130,7 @@ namespace SmartMeterWeb.Services
                             <b>Due Date:</b> {bill.DueDate}
                         </p>
                         <p>Thank you,<br/>Smart Meter System</p>"
-                );EntityEntryGraphIterator 
+                );
             }
             catch (Exception ex)
             {
