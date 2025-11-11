@@ -43,35 +43,6 @@ namespace SmartMeterWeb.Services
         }
 
 
-        //public async Task<IActionResult> UploadConsumerPhotoAsync(string ConsumerName, IFormFile file)
-        //{
-        //    if (file == null)
-        //    {
-        //        throw new Exception("no file uploaded");
-        //    }
-
-        //    var con = await _context.Consumers.FirstOrDefaultAsync(c => c.Name == ConsumerName);
-        //    if (con == null)
-        //    {
-        //        throw new Exception("invalid name");
-        //    }
-
-        //    using (var memory = new MemoryStream())
-        //    {
-        //        //await file.CopyToAsync(memory);
-        //        //var photo = new PhotoDto
-        //        //{
-        //        //    FileName = file.FileName,
-        //        //    ContentType = file.ContentType,
-        //        //    ImageData = memory.ToArray()
-        //        //};
-
-        //        //con.PhotoId = photo.Id;
-        //        //await _context.SaveChangesAsync();
-        //        //return new FileContentResult(photo.ImageData, photo.ContentType);
-        //        return;
-        //    }
-        //}
 
         public async Task<IActionResult> UploadConsumerPhotoAsync(string ConsumerName, IFormFile file)
         {

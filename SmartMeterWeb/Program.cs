@@ -12,8 +12,12 @@ using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Middlewares;
 using SmartMeterWeb.Services;
+using SmartMeterWeb.Validators;
 using System.Text;
 using System.Text.Json.Serialization;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
 
 
 namespace SmartMeterWeb
@@ -24,7 +28,7 @@ namespace SmartMeterWeb
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // ✅ Setup Serilog logger
+            //  Setup Serilog logger
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
                 .WriteTo.File(
@@ -71,8 +75,14 @@ namespace SmartMeterWeb
                 c.EnableAnnotations();
             });
 
+            builder.Services.AddControllers();
 
 
+            builder.Services.AddValidatorsFromAssemblyContaining<CustomerCareDtoValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<HistoricalConsumptionRequestValidator>();
+
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddFluentValidationClientsideAdapters();
 
             builder.Services.AddControllers(options =>
             {
