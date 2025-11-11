@@ -8,7 +8,7 @@ namespace SmartMeterWeb.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(Roles = "User,Consumer")]
-    public class MeterReadingController : ControllerBase
+    public class MeterReadingController : BaseController
     {
         private readonly IMeterReadingService _meterReadingService;
 
@@ -20,15 +20,40 @@ namespace SmartMeterWeb.Controllers
         [HttpPost("record")]
         public async Task<IActionResult> RecordReading([FromBody] MeterReadingDto dto)
         {
-            var reading = await _meterReadingService.RecordReadingAsync(dto);
-            return Ok(reading);
+            try
+            {
+                var reading = await _meterReadingService.RecordReadingAsync(dto);
+                if (reading == null)
+                {
+                    return Error("Failed to record meter reading.",404);
+                }
+                return Success(reading, "Meter reading recorded successfully.");
+            }
+
+            catch (Exception ex)
+            {
+                return Error($"An error occurred while recording the meter reading: {ex.Message}", 500);
+            }
+
         }
 
         [HttpGet("{meterId}")]
         public async Task<IActionResult> GetReadings(string meterId)
         {
-            var readings = await _meterReadingService.GetReadingsByMeterAsync(meterId);
-            return Ok(readings);
+            try
+            {
+
+                var readings = await _meterReadingService.GetReadingsByMeterAsync(meterId);
+                if (readings == null || !readings.Any())
+                {
+                    return Error("No readings found for the specified meter.", 404);
+                }
+                return Success(readings, "Meter readings fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                return Error($"An error occurred while fetching meter readings: {ex.Message}", 500);
+            }
         }
     }
 }
