@@ -13,32 +13,40 @@ namespace SmartMeterWeb.Services
         
         private readonly AppDbContext _context;
         private readonly IMailService _mailService;
+        private readonly ILogger<CustomerCareService> _logger;
 
-        public CustomerCareService(AppDbContext context, IMailService mailService)
+        public CustomerCareService(AppDbContext context, IMailService mailService, ILogger<CustomerCareService> logger)
         {
             _context = context;
             _mailService = mailService;
+            _logger = logger;
         }
 
         public async Task AddMessageAsync(CustomerCareDto dto)
         {
-            var message = new CustomerCareMessage
+            _logger.LogInformation("Adding new message from {Name}", dto.Name);
+
+            try
             {
-                ConsumerId = dto.ConsumerId,
-                Name = dto.Name,
-                Phone = dto.PhoneNumber,
-                Message = dto.Message,
-                mailid=dto.mailid
-            };
+                var message = new CustomerCareMessage
+                {
+                    ConsumerId = dto.ConsumerId,
+                    Name = dto.Name,
+                    Phone = dto.PhoneNumber,
+                    Message = dto.Message,
+                    mailid = dto.mailid
+                };
 
-            _context.CustomerCareMessages.Add(message);
-            await _context.SaveChangesAsync();
-            await _mailService.SendEmailAsync(
-        "msurendra.nit@gmail.com",
-        "Customer Issue Received",
-        "<p>Your issue has been received. We will resolve it within 3 days.</p>"
-    );
+                _context.CustomerCareMessages.Add(message);
+                await _context.SaveChangesAsync();
 
+                _logger.LogInformation("Customer message saved successfully for {Name}", dto.Name);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving message for {Name}", dto.Name);
+                throw new ApiException("Unexpected error occurred while saving message", 500);
+            }
         }
 
         public async Task<List<CustomerCareMessage>> GetAllMessagesAsync()
