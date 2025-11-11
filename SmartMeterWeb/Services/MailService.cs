@@ -27,8 +27,11 @@ namespace SmartMeterWeb.Services
             email.Body = builder.ToMessageBody();
 
             using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.Password);
+            await smtp.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, MailKit.Security.SecureSocketOptions.None);
+            if (!string.IsNullOrEmpty(_emailSettings.Password))
+            {
+                await smtp.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.Password);
+            }
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
         }
