@@ -235,5 +235,58 @@ namespace SmartMeterWeb.Services
             }
         }
 
+        public async Task<string> PayBillAsync(long consumerId, long billId, double amount)
+        {
+            var bill = await _context.Billings
+                .FirstOrDefaultAsync(b => b.ConsumerId == consumerId && b.BillId == billId);
+
+            if (bill == null)
+            {
+                throw new ApiException("Bill not found for the given ConsumerId and BillId.", 404);
+            }
+
+            if (bill.PaymentStatus == "Paid")
+            {
+                return $"Bill ID {billId} is already paid.";
+            }
+
+            // Calculate the outstanding balance
+            // Added a small tolerance for floating-point comparison
+            double balance = Math.Round(bill.TotalAmount - bill.AmountPaid, 4);
+
+            if (amount <= 0)
+            {
+                return "Payment amount must be greater than zero.";
+            }
+
+            // Check if amount exceeds the balance
+            if (amount > balance)
+            {
+                return $"Entered amount {amount} exceeds the outstanding balance. The outstanding balance is {balance}.";
+            }
+            // Check if amount exactly matches the balance
+            else if (Math.Abs(amount - balance) < 0.0001) // Using tolerance for double comparison
+            {
+                bill.AmountPaid += amount;
+                bill.PaymentStatus = "Paid"; // As requested
+                bill.PaidDate = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+                return "Bill payment successful.";
+            }
+            // Amount is less than the balance
+            else
+            {
+                bill.AmountPaid += amount;
+                bill.PaymentStatus = "Partially-Paid"; // As requested
+                bill.PaidDate = DateTime.UtcNow;
+
+                double newBalance = bill.TotalAmount - bill.AmountPaid;
+                await _context.SaveChangesAsync();
+                return $"Partial payment successful. Remaining amount: {Math.Round(newBalance, 2)}";
+            }
+        }
+
+
     }
 }

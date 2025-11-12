@@ -104,7 +104,7 @@ namespace SmartMeterWeb.Data.Context
                 .HasComputedColumnSql("\"BaseAmount\" + \"TaxAmount\"", stored: true);
 
             modelBuilder.Entity<Billing>()
-                .ToTable(t => t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')"));
+                .ToTable(t => t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled','Partially-Paid')"));
 
             modelBuilder.Entity<Billing>().HasData(
     new Billing
