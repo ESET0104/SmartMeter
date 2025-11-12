@@ -15,6 +15,7 @@ namespace SmartMeterWeb.Data.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Consumer> Consumers { get; set; }
+        public DbSet<Application> Applications { get; set; }
         public DbSet<Tariff> Tariffs { get; set; }
         public DbSet<TodRule> TodRules { get; set; }
         public DbSet<TariffSlab> TariffSlabs { get; set; }

@@ -1,20 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Asn1.Ocsp;
 using SmartMeterWeb.Configs;
 using SmartMeterWeb.Data.Context;
 using SmartMeterWeb.Data.Entities;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Models.AuthDto;
 using System.IdentityModel.Tokens.Jwt;
-
-//using BCrypt.Net;
-//using Microsoft.AspNetCore.Http.HttpResults;
-//using System.CodeDom.Compiler;
 using System.Security.Claims;
 using System.Text;
-//using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using SmartMeterWeb.Exceptions;
+
 
 namespace SmartMeterWeb.Services
 {
@@ -24,42 +21,80 @@ namespace SmartMeterWeb.Services
         private readonly IConfiguration _config;
         private readonly ILogService _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+        private readonly IMailService _mailService;
 
         
 
-        public AuthService(AppDbContext context, IConfiguration config, ILogService logger, IHttpContextAccessor httpContextAccessor)
+        public AuthService(AppDbContext context, IConfiguration config, ILogService logger, IHttpContextAccessor httpContextAccessor, IMailService mailService)
         {
             _context = context;
             _config = config;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _mailService = mailService;
+        }
+
+        private bool IsUserAuthenticated()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+            return user?.Identity != null && user.Identity.IsAuthenticated;
         }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
         {
             if(request.Role == "User")
             {
-                if(await _context.Users.AnyAsync(u => u.UserName == request.UserName))
+                if (IsUserAuthenticated())
                 {
-                    throw new Exception("UserName already taken");
+                    var checkRole = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role);
+                    if (checkRole != "User")
+                    {
+                        throw new ApiException("Only Users can add new Users");
+                    }
+                    if (await _context.Users.AnyAsync(u => u.UserName == request.UserName))
+                    {
+                        throw new ApiException("UserName already taken");
+                    }
+
+                    var user = new User
+                    {
+                        UserName = request.UserName,
+                        DisplayName = request.DisplayName,
+                        Email = request.Email,
+                        Phone = request.Phone,
+                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("User123"),
+                        IsActive = true
+                    };
+
+                    try
+                    {
+                        await _mailService.SendEmailAsync(
+                            user.Email ?? "user.test@local.com", // fallback for testing
+                            "User Registration Successful",
+                            $@"
+                        <h3>Hello {user.DisplayName},</h3>
+                        <p>You are successfully registered as a Smart meter service provider.</p>
+                        <p>
+                            Your services are licensed and activated henceforth. You are expected to follow the Guidelines.
+                        </p>
+                        <p> Your default password is ""User123"". Please change your password after first login.
+                        <p>Thank you,<br/>Smart Meter System</p>"
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        // _logger.LogError(ex, "Error sending email for bill {BillId}", bill.BillId);
+                        throw new ApiException("User Registered but failed to send email notification.", 500);
+                    }
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
                 }
-
-                var user = new User
+                else
                 {
-                    UserName = request.UserName,
-                    DisplayName = request.DisplayName,
-                    Email = request.Email,
-                    Phone = request.Phone,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                    
-                    IsActive = true
-                };
+                    throw new ApiException("You need to be a User(logged in) to add new Users");
+                }
+                return new AuthResponseDto { Name = request.DisplayName, Role = request.Role };
 
-
-
-                _context.Users.Add(user);
-                
             }
             else if(request.Role == "Consumer")
             {
@@ -68,29 +103,23 @@ namespace SmartMeterWeb.Services
                     throw new Exception("Email already registered.");
                 }
 
-                var consumer = new Consumer
+                var application = new Application
                 {
                     Name = request.UserName,
                     Email = request.Email,
-                    Phone = request.Phone,
-                    OrgUnitId = request.OrgUnitId,
-                    TariffId = request.TariffId,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedBy = "System",
-                    Status = "Active",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+                    Phone = request.Phone
                 };
 
-                _context.Consumers.Add(consumer);
+                _context.Applications.Add(application);
+                await _context.SaveChangesAsync();
+                return new AuthResponseDto { Name = request.UserName, Role = request.Role, Message = "Please wait for approval" };
+                //_context.Consumers.Add(consumer);
             }
             else
             {
                 throw new Exception("invalid role");
             }
-
-            await _context.SaveChangesAsync();
-
-            return new AuthResponseDto { Name = request.DisplayName ?? request.UserName, Role = request.Role };
+            
         }
 
         public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
