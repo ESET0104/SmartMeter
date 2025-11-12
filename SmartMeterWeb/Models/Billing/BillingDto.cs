@@ -1,4 +1,6 @@
-﻿namespace SmartMeterWeb.Models.Billing
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartMeterWeb.Models.Billing
 {
     public class BillingDto
     {
@@ -21,6 +23,19 @@
             public double TotalAmount { get; set; }
             public string BillingMonth { get; set; } = null!;
             public string PaymentStatus { get; set; } = "Unpaid";
+        }
+
+        public class PayBillRequestDto
+        {
+            [Required]
+            public long ConsumerId { get; set; }
+
+            [Required]
+            public long BillId { get; set; }
+
+            [Required]
+            [Range(0.01, double.MaxValue, ErrorMessage = "Payment amount must be greater than zero.")]
+            public double Amount { get; set; }
         }
     }
 }

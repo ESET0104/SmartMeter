@@ -187,5 +187,34 @@ Optionally pass it to the next middleware in the pipeline
 added looger for few services
 # after implementing base controller
 
+
 TariffController → BaseController → ControllerBase
 
+
+tarrif controll
+customercare cotroller
+consumercontroller
+reportcontroller
+
+
+
+| Field       | Type       | Purpose                                                                                                                        |
+| ----------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **success** | `bool`     | Tells frontend if the operation worked or failed — *regardless of HTTP code*. Example: `true` for 200, `false` for 404 or 500. |
+| **message** | `string`   | Human-readable message. Explains what happened (“Created successfully”, “Not found”, “Validation failed”).                     |
+| **data**    | `T?`       | The actual response payload — an object, list, or null (if you just want to return a message).                                 |
+| **errors**  | `object?`  | Optional field for validation or exception details. Usually null unless something goes wrong.                                  |
+| **time**    | `DateTime` | Timestamp of the response (helps logging / debugging).                                                                         |
+
+3️⃣ Why sometimes you see Success<object>
+
+Sometimes, when you don’t have specific data to send, but still want to return a success message, you can call:
+
+return Success<object>(null, "Operation completed successfully.");
+
+
+Here:
+
+object means: “I’m not returning any specific type.”
+
+null means: “There’s no actual data in this response

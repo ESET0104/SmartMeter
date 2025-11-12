@@ -28,6 +28,7 @@ namespace SmartMeterWeb.Data.Context
         public DbSet<OrgUnit> OrgUnits { get; set; }
         public DbSet<LoginLog> LoginLogs { get; set; }
         public DbSet<CustomerCareMessage> CustomerCareMessages { get; set; }
+        public DbSet<SolarMeterReading> SolarMeterReadings { get; set; }
 
         public DbSet<CustomerCareReply> CustomerCareReplies { get; set; }
 
@@ -104,7 +105,7 @@ namespace SmartMeterWeb.Data.Context
                 .HasComputedColumnSql("\"BaseAmount\" + \"TaxAmount\"", stored: true);
 
             modelBuilder.Entity<Billing>()
-                .ToTable(t => t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')"));
+                .ToTable(t => t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled','Partially-Paid')"));
 
             modelBuilder.Entity<Billing>().HasData(
     new Billing

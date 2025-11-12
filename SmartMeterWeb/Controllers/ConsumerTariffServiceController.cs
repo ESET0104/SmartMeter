@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartMeterWeb.Interfaces;
-using SmartMeterWeb.Services;
+using SmartMeterWeb.Models.Common; 
 
 namespace SmartMeterWeb.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
-    public class ConsumerTariffServiceController : ControllerBase
+    [AllowAnonymous]
+    public class ConsumerTariffServiceController : BaseController
     {
         private readonly IConsumerTariffService _consumerTariffService;
 
@@ -17,20 +17,16 @@ namespace SmartMeterWeb.Controllers
             _consumerTariffService = consumerTariffService;
         }
 
-
-        [AllowAnonymous]
+        
         [HttpGet("consumer/{consumerId}")]
         public async Task<IActionResult> GetConsumerTariffDetails(long consumerId)
         {
             var data = await _consumerTariffService.GetConsumerTariffDetailsAsync(consumerId);
 
             if (data == null)
-                return NotFound(new { Message = "Consumer not found or inactive" });
+                return Error("Consumer not found or inactive", 404);
 
-            return Ok(data);
+            return Success(data, "Consumer tariff details fetched successfully");
         }
     }
 }
-
-
-

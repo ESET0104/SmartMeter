@@ -11,7 +11,7 @@ namespace SmartMeterWeb.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "id",
+                name: "Id",
                 table: "Addresses");
         }
 
@@ -19,7 +19,7 @@ namespace SmartMeterWeb.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "id",
+                name: "Id",
                 table: "Addresses",
                 type: "integer",
                 nullable: true);
