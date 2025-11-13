@@ -37,6 +37,7 @@ namespace SmartMeterWeb.Data.Entities
         [Required]
         [Column(TypeName = "numeric(18,4)")]
         public double TotalAmount { get; private set; } 
+        public double AmountPaid { get; set; } 
 
         [Required]
         public DateTime GeneratedAt { get; set; } 

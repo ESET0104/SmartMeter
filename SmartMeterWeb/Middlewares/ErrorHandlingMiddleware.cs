@@ -10,11 +10,13 @@ namespace SmartMeterWeb.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        private readonly IWebHostEnvironment _env;
 
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger, IWebHostEnvironment env)
         {
             _next = next;
             _logger = logger;
+            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -45,9 +47,11 @@ namespace SmartMeterWeb.Middlewares
             }
             catch (Exception ex)
             {
-                // ✳️ Handle unknown/unexpected errors
-                _logger.LogError(ex, "Unhandled exception occurred");
-                await HandleExceptionAsync(context, (int)HttpStatusCode.InternalServerError, "Internal Server Error");
+
+                _logger.LogError(ex, "Unhandled exception");
+                var message = _env.IsDevelopment() ? ex.Message : "Internal Server Error";
+                await HandleExceptionAsync(context, 500, message);
+
             }
         }
 

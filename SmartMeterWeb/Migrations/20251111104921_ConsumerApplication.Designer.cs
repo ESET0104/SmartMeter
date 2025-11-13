@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251111104921_ConsumerApplication")]
+    partial class ConsumerApplication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,9 +139,6 @@ namespace SmartMeterWeb.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("BillId"));
 
-                    b.Property<double>("AmountPaid")
-                        .HasColumnType("double precision");
-
                     b.Property<double>("BaseAmount")
                         .HasColumnType("numeric(18,4)");
 
@@ -189,14 +189,13 @@ namespace SmartMeterWeb.Migrations
 
                     b.ToTable("Billings", t =>
                         {
-                            t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled','Partially-Paid')");
+                            t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')");
                         });
 
                     b.HasData(
                         new
                         {
                             BillId = 1L,
-                            AmountPaid = 0.0,
                             BaseAmount = 901.79999999999995,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -213,7 +212,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 2L,
-                            AmountPaid = 0.0,
                             BaseAmount = 7296.1199999999999,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -230,7 +228,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 3L,
-                            AmountPaid = 0.0,
                             BaseAmount = 1264.2,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -247,7 +244,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 4L,
-                            AmountPaid = 0.0,
                             BaseAmount = 966.75,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -264,7 +260,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 5L,
-                            AmountPaid = 0.0,
                             BaseAmount = 121655.60000000001,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -909,34 +904,6 @@ namespace SmartMeterWeb.Migrations
                             ParentId = 4,
                             Type = "DTR"
                         });
-                });
-
-            modelBuilder.Entity("SmartMeterWeb.Data.Entities.SolarMeterReading", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("EnergyExportedToGrid")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("EnergyGenerated")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("MeterId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("ReadingDateTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MeterId");
-
-                    b.ToTable("SolarMeterReadings");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Tariff", b =>
@@ -1620,17 +1587,6 @@ namespace SmartMeterWeb.Migrations
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("SmartMeterWeb.Data.Entities.SolarMeterReading", b =>
-                {
-                    b.HasOne("SmartMeterWeb.Data.Entities.Meter", "Meter")
-                        .WithMany()
-                        .HasForeignKey("MeterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Meter");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.TariffDetails", b =>

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartMeterWeb.Data.Context;
@@ -11,9 +12,11 @@ using SmartMeterWeb.Data.Context;
 namespace SmartMeterWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110061125_SolarMeterR")]
+    partial class SolarMeterR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,35 +58,6 @@ namespace SmartMeterWeb.Migrations
                     b.HasIndex("ConsumerId");
 
                     b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("SmartMeterWeb.Data.Entities.Application", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Applications");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.Arrear", b =>
@@ -136,9 +110,6 @@ namespace SmartMeterWeb.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("BillId"));
 
-                    b.Property<double>("AmountPaid")
-                        .HasColumnType("double precision");
-
                     b.Property<double>("BaseAmount")
                         .HasColumnType("numeric(18,4)");
 
@@ -189,14 +160,13 @@ namespace SmartMeterWeb.Migrations
 
                     b.ToTable("Billings", t =>
                         {
-                            t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled','Partially-Paid')");
+                            t.HasCheckConstraint("CK_Billings_PaidStatus", "\"PaymentStatus\" IN ('Paid','Unpaid','Overdue','Cancelled')");
                         });
 
                     b.HasData(
                         new
                         {
                             BillId = 1L,
-                            AmountPaid = 0.0,
                             BaseAmount = 901.79999999999995,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -213,7 +183,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 2L,
-                            AmountPaid = 0.0,
                             BaseAmount = 7296.1199999999999,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -230,7 +199,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 3L,
-                            AmountPaid = 0.0,
                             BaseAmount = 1264.2,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -247,7 +215,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 4L,
-                            AmountPaid = 0.0,
                             BaseAmount = 966.75,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -264,7 +231,6 @@ namespace SmartMeterWeb.Migrations
                         new
                         {
                             BillId = 5L,
-                            AmountPaid = 0.0,
                             BaseAmount = 121655.60000000001,
                             BillingPeriodEnd = new DateOnly(2025, 9, 1),
                             BillingPeriodStart = new DateOnly(2025, 8, 1),
@@ -453,33 +419,9 @@ namespace SmartMeterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("mailid")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("MessageId");
 
                     b.ToTable("CustomerCareMessages");
-                });
-
-            modelBuilder.Entity("SmartMeterWeb.Data.Entities.CustomerCareReply", b =>
-                {
-                    b.Property<int>("ResponseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ResponseId"));
-
-                    b.Property<string>("MessageText")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("consumerID")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ResponseId");
-
-                    b.ToTable("CustomerCareReplies");
                 });
 
             modelBuilder.Entity("SmartMeterWeb.Data.Entities.LoginLog", b =>
