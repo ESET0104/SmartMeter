@@ -218,3 +218,58 @@ Here:
 object means: “I’m not returning any specific type.”
 
 null means: “There’s no actual data in this response
+
+
+Why we need it
+
+### Without global handling:
+
+Every controller or service might need its own try-catch.
+
+Repeated error logging and response formatting.
+
+Harder to maintain and debug.
+
+### With global handling:
+
+One single place for catching all exceptions.
+
+Unified and clean error responses.
+
+Automatic logging.
+
+Easier debugging and consistent API responses
+
+### Global Exception Handling Middleware
+
+Every incoming request passes through here.
+
+_next(context) calls the next middleware or controller.
+
+If no exception occurs → it moves normally.
+
+If something fails → it jumps to the catch blocks.
+
+
+## How it works
+
+          Client Request
+               ↓
+ ErrorHandlingMiddleware
+    ├── Catches exceptions
+    ├── Handles validation errors
+    └── Returns ApiResponse (error form)
+               ↓
+ Controller (inheriting BaseController)
+    ├── Uses Success() or Error()
+    └── Returns ApiResponse (success form)
+               ↓
+ Standard JSON sent to client
+
+
+ ## to get files directory
+
+ tree "D:\SmartMeter" /A /F | findstr /V /R "^[A-Z]:\\\|\. "
+tree "D:\SmartMeter" /A /F | findstr /V /R "^[A-Z]:\\\|\. " > folder_structure.txt
+
+

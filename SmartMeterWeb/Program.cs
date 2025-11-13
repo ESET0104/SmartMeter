@@ -80,6 +80,7 @@ namespace SmartMeterWeb
 
             builder.Services.AddValidatorsFromAssemblyContaining<CustomerCareDtoValidator>();
             builder.Services.AddValidatorsFromAssemblyContaining<HistoricalConsumptionRequestValidator>();
+            //builder.Services.AddValidatorsFromAssemblyContaining<BillingRequestDtoValidator>();
 
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddFluentValidationClientsideAdapters();

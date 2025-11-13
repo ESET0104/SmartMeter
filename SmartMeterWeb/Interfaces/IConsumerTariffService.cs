@@ -8,5 +8,6 @@ namespace SmartMeterWeb.Interfaces
         //to the tariff info (with slabs & TOD rules) for a given consumer.
 
         Task<TariffInfoDto?> GetConsumerTariffDetailsAsync(long consumerId);
+
     }
 }

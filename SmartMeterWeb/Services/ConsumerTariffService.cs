@@ -1,7 +1,8 @@
-﻿using SmartMeterWeb.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartMeterWeb.Data.Context;
+using SmartMeterWeb.Exceptions;
 using SmartMeterWeb.Interfaces;
 using SmartMeterWeb.Models.Tariffs;
-using Microsoft.EntityFrameworkCore;
 
 namespace SmartMeterWeb.Services
 {
@@ -14,58 +15,78 @@ namespace SmartMeterWeb.Services
             _context = context;
         }
 
-        public async Task<TariffInfoDto?> GetConsumerTariffDetailsAsync(long consumerId)
+        /// <summary>
+        /// Fetches tariff details (base rate, slabs, TOD rules) for a given consumer.
+        /// </summary>
+        public async Task<TariffInfoDto> GetConsumerTariffDetailsAsync(long consumerId)
         {
-            // Step 1: Get Consumer’s TariffId
-            var consumerTariff = await (from c in _context.Consumers
-                                        where c.ConsumerId == consumerId
-                                        select new { c.TariffId }).FirstOrDefaultAsync();
+            if (consumerId <= 0)
+                throw new ApiException("Invalid Consumer ID provided.", 400);
 
+            try
+            {
+                // Step 1: Get Consumer’s TariffId
+                var consumerTariff = await _context.Consumers
+                    .Where(c => c.ConsumerId == consumerId && !c.IsDeleted)
+                    .Select(c => new { c.TariffId })
+                    .FirstOrDefaultAsync();
 
-            if (consumerTariff == null)
-                return null;
+                if (consumerTariff == null)
+                    throw new ApiException("Consumer not found or inactive.", 404);
 
-            var tariffId = consumerTariff.TariffId;
+                var tariffId = consumerTariff.TariffId;
 
-            // Step 2: Get Tariff Info
-            var tariffInfo = await (from t in _context.Tariffs
-                                    where t.TariffId == tariffId
-                                    select new TariffInfoDto
-                                    {
-                                        TariffName = t.Name,
-                                        BaseRate = t.BaseRate,
-                                        TaxRate = t.TaxRate,
-                                        TodRules = new List<TodRuleDto>(),
-                                        TariffSlabs = new List<TariffSlabDto>()
-                                    }).FirstOrDefaultAsync();
+                // Step 2: Fetch Tariff Basic Info
+                var tariffInfo = await _context.Tariffs
+                    .Where(t => t.TariffId == tariffId)
+                    .Select(t => new TariffInfoDto
+                    {
+                        TariffName = t.Name,
+                        BaseRate = t.BaseRate,
+                        TaxRate = t.TaxRate
+                    })
+                    .FirstOrDefaultAsync();
 
-            if (tariffInfo == null)
-                return null;
+                if (tariffInfo == null)
+                    throw new ApiException("No tariff information found for this consumer.", 404);
 
-            // Step 3: TOD Rules (manual join)
-            tariffInfo.TodRules = await (from tr in _context.TodRules
-                                         where tr.TariffId == tariffId && !tr.IsDeleted
-                                         orderby tr.StartTime
-                                         select new TodRuleDto
-                                         {
-                                             Name = tr.Name,
-                                             StartTime = tr.StartTime,
-                                             EndTime = tr.EndTime,
-                                             RatePerKwh = tr.RatePerKwh
-                                         }).ToListAsync();
+                // Step 3: Fetch TOD Rules
+                tariffInfo.TodRules = await _context.TodRules
+                    .Where(tr => tr.TariffId == tariffId && !tr.IsDeleted)
+                    .OrderBy(tr => tr.StartTime)
+                    .Select(tr => new TodRuleDto
+                    {
+                        Name = tr.Name,
+                        StartTime = tr.StartTime,
+                        EndTime = tr.EndTime,
+                        RatePerKwh = tr.RatePerKwh
+                    })
+                    .ToListAsync();
 
-            // Step 4: Tariff Slabs (manual join)
-            tariffInfo.TariffSlabs = await (from ts in _context.TariffSlabs
-                                            where ts.TariffId == tariffId && !ts.IsDeleted
-                                            orderby ts.FromKwh
-                                            select new TariffSlabDto
-                                            {
-                                                FromKwh = ts.FromKwh,
-                                                ToKwh = ts.ToKwh,
-                                                RatePerKwh = ts.RatePerKwh
-                                            }).ToListAsync();
+                // Step 4: Fetch Tariff Slabs
+                tariffInfo.TariffSlabs = await _context.TariffSlabs
+                    .Where(ts => ts.TariffId == tariffId && !ts.IsDeleted)
+                    .OrderBy(ts => ts.FromKwh)
+                    .Select(ts => new TariffSlabDto
+                    {
+                        FromKwh = ts.FromKwh,
+                        ToKwh = ts.ToKwh,
+                        RatePerKwh = ts.RatePerKwh
+                    })
+                    .ToListAsync();
 
-            return tariffInfo;
+                return tariffInfo;
+            }
+            catch (ApiException)
+            {
+                // Known application errors — just rethrow
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Unhandled errors (e.g., DB issues)
+                throw new ApiException($"An unexpected error occurred while fetching tariff details: {ex.Message}", 500);
+            }
         }
     }
 }
